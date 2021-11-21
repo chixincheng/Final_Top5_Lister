@@ -12,13 +12,15 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
     LOGIN_USER: "LOGIN_USER",
-    LOGOUT_USER: "LOGOUT_USER"
+    LOGOUT_USER: "LOGOUT_USER",
+    GUEST_USER: "GUEST_USER"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        guest: false
     });
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -43,25 +45,36 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    guest: false
                 });
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    guest: false
                 })
             }
             case AuthActionType.LOGIN_USER:{
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    guest: false
                 })
             }
             case AuthActionType.LOGOUT_USER:{
                 return setAuth({
                     user: payload,
-                    loggedIn: false
+                    loggedIn: false,
+                    guest: false
+                })
+            }
+            case AuthActionType.GUEST_USER:{
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    guest: true
                 })
             }
             default:
@@ -80,6 +93,9 @@ function AuthContextProvider(props) {
                 }
             });
         }
+    }
+    auth.loginstatus = function () {
+        return auth.loggedIn;
     }
     auth.logoutUser = function (){
         authReducer({
@@ -106,7 +122,11 @@ function AuthContextProvider(props) {
             handleOpen();
         }
     }
-
+    auth.guestview = function(){
+        authReducer({
+            type: AuthActionType.GUEST_USER
+        })
+    }
     auth.registerUser = async function(userData, store) {
         const response = await api.registerUser(userData);      
         if (response.status === 200) {

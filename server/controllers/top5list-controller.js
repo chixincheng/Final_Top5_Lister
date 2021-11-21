@@ -120,7 +120,12 @@ getTop5ListPairs = async (req, res) => {
                 let pair = {
                     _id: list._id,
                     name: list.name,
-                    ownerEmail: list.ownerEmail
+                    ownerEmail: list.ownerEmail,
+                    Author: list.Author,
+                    like: list.like,
+                    dislike: list.dislike,
+                    view: list.view,
+                    publish: list.publish
                 };
                 pairs.push(pair);
             }

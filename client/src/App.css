@@ -61,12 +61,28 @@ body {
   border-width: 2px;
   border-style: solid;
   border-radius: 10px;
-  padding-left: 10%;
   padding-top: 5%;
   padding-bottom: 5%;
   height:70%;
   text-align: center;
   vertical-align: center;
+}
+#smalltext{
+  padding-top: 5%;
+  padding-left: 3%;
+  padding-right: 3%;
+  color: black;
+  text-align: center;
+  vertical-align: center;
+  font-size: 2vw;
+}
+#developer{
+  padding-top: 32%;
+  padding-left: 80%;
+  color: black;
+  text-align: center;
+  vertical-align: center;
+  font-size: 1vw;
 }
 
 #edit-toolbar {
@@ -94,15 +110,6 @@ body {
   cursor: not-allowed;
 }
 
-#top5-list-selector {
-  position: absolute;
-  left: 0%;
-  top: 10%;
-  width: 100%;
-  height: 80%;
-  background-color: var(--swatch-primary);
-}
-
 #top5-workspace {
   position: absolute;
   left: 0%;
@@ -115,43 +122,69 @@ body {
 #top5-statusbar {
   position: absolute;
   left: 0%;
-  top: 90%;
+  top: 93%;
   width: 100%;
   height: 10%;
-  background-color: lightsalmon;
+  background-color: #c4c4c4;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 36pt;
 }
-
-#list-selector-heading {
+#home-selector {
+  position: absolute;
+  left: 0%;
+  top: 7%;
+  width: 100%;
+  height: 90%;
+  background-color: #c4c4c4;
+}
+#home-heading {
   position: absolute;
   left: 0%;
   top: 0%;
+  bottom: 0%;
   width: 100%;
   height: 10%;
   text-align: center;
-  font-size: 24pt;
-  font-weight: bold;
+  font-size: large;
+  display: flex;
+  background-color: #c4c4c4;
+}
+#home-footing {
+  position: absolute;
+  left: 0%;
+  top: 90%;
+  width: 100%;
+  height: 10%;
+  background-color: #c4c4c4;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 36pt;
 }
-
+#Author{
+  font-Size: 20pt;
+  text-decoration-line: underline;
+  text-decoration-color: blue;
+  color: blue;
+}
 #add-list-button {
   float: left;
 }
-
+#sortby-list-button{
+  left: 65%;
+}
 #list-selector-list {
   position: absolute;
   left: 0%;
   top: 10%;
   width: 100%;
-  height: 90%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  overflow-x:hidden
 }
 
 .list-card,

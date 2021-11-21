@@ -239,6 +239,12 @@ function GlobalStoreContextProvider(props) {
         }
         asyncChangeListName(id);
     }
+    store.likeList = function(id){
+
+    }
+    store.disLikeList = function(id){
+
+    }
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
         storeReducer({
@@ -256,7 +262,12 @@ function GlobalStoreContextProvider(props) {
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email
+            ownerEmail: auth.user.email,
+            Author: auth.user.lastName + " " + auth.user.firstName,
+            like: 0,
+            dislike: 0,
+            view: 0,
+            publish: false
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {
@@ -276,7 +287,12 @@ function GlobalStoreContextProvider(props) {
         }
     }
     function filterByownerEmail(list){
-        if(list.ownerEmail === auth.user.email){
+        if(auth.user != null){
+            if(list.ownerEmail === auth.user.email){
+                return true;
+            }
+        }
+        else{//view as guest, return all list then filter to get community list
             return true;
         }
         return false;
