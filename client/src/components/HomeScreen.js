@@ -16,12 +16,14 @@ import Box from '@mui/material/Box';
 import ListModal from './ListModal';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { useHistory } from 'react-router-dom'
 /*
     This React component lists all the top5 lists in the UI.
     
     @author McKilla Gorilla
 */
 const HomeScreen = () => {
+    const history = useHistory();
     const { store } = useContext(GlobalStoreContext);
     const {auth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
@@ -40,13 +42,8 @@ const HomeScreen = () => {
         event.stopPropagation();
         setOpen(false);
     };
-
-    useEffect(() => {
-        store.loadIdNamePairs();
-    }, []);
-
     function handleViewHomeList() {
-
+        store.loadIdNamePairs();
     }
 
     function handleViewAllList() {
@@ -80,6 +77,9 @@ const HomeScreen = () => {
     }
     function handleSortByDislikes(){
         handleMenuClose();
+    }
+    function handleSearchKeyWord (event){
+        
     }
     const menulist = (
         <Menu
@@ -166,6 +166,7 @@ const HomeScreen = () => {
                         id = "search-key"
                         label = "search"
                         margin = "none"
+                        onChange = {handleSearchKeyWord}
                         style = {{ background: "white", top: "13%"}}
                     >
                     </TextField>

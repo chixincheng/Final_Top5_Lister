@@ -115,7 +115,6 @@ function AuthContextProvider(props) {
                 }
             })
             history.push("/");
-            store.loadIdNamePairs();
         }
         else {
             setMessage(response.data.errorMessage);
