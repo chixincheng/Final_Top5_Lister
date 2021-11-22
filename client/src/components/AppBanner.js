@@ -117,8 +117,9 @@ export default function AppBanner() {
                             aria-haspopup="true"
                             onClick={handleProfileMenuOpen}
                             color="inherit"
-                        >
-                            { getAccountMenu(auth.loggedIn) }
+                            style = {{borderRadius: "50%", backgroundColor: "purple", 
+                            height: "2.5rem", width: "2.5rem"}}
+                        >{getAccountMenu(auth.loggedIn)}
                         </IconButton>
                     </Box>
                 </Toolbar>

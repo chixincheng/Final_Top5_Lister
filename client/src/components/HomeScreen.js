@@ -14,6 +14,8 @@ import TextField from '@mui/material/TextField';
 import SortIcon from '@mui/icons-material/Sort';
 import Box from '@mui/material/Box';
 import ListModal from './ListModal';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -23,6 +25,16 @@ const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
     const {auth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const isMenuOpen = Boolean(anchorEl);
+
+    const handleProfileMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     function handleClose (event){
         event.stopPropagation();
@@ -49,15 +61,49 @@ const HomeScreen = () => {
 
     }
 
-    function handleSortBy(){
-
-    }
-
     function handleCreateNewList(event) {
         event.stopPropagation();
         setOpen(true);
         //store.createNewList();
     }
+    function handleSortByNewestDate(){
+        handleMenuClose();
+    }
+    function handleSortByOldestDate(){
+        handleMenuClose();
+    }
+    function handleSortByViews(){
+        handleMenuClose();
+    }
+    function handleSortByLikes(){
+        handleMenuClose();
+    }
+    function handleSortByDislikes(){
+        handleMenuClose();
+    }
+    const menulist = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            id="primary-search-account-menu"
+            keepMounted
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+        >
+            <MenuItem onClick={handleSortByNewestDate}>Publish Date (Newest)</MenuItem>
+            <MenuItem onClick={handleSortByOldestDate}>Publish Date (Oldest)</MenuItem>
+            <MenuItem onClick={handleSortByViews}>Views</MenuItem>
+            <MenuItem onClick={handleSortByLikes}>Likes</MenuItem>
+            <MenuItem onClick={handleSortByDislikes}>Dislikes</MenuItem>
+        </Menu>
+    );
 
     let listCard = "";
     if (store) {
@@ -128,8 +174,11 @@ const HomeScreen = () => {
                     color="inherit" 
                     aria-label="sortby"
                     id="sortby-list-button"
+                    aria-label="sortby"
+                    aria-controls="primary-search-account-menu"
+                    aria-haspopup="true"
                     size = "large"
-                    onClick={handleSortBy}
+                    onClick={handleProfileMenuOpen}
                 >
                     SORT BY <SortIcon/>
                 </IconButton>
@@ -155,6 +204,7 @@ const HomeScreen = () => {
                 <Statusbar />
             }
             <ListModal open = {open} close = {handleClose} name = "?"/>
+            {menulist}
         </div>)
 }
 

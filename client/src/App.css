@@ -266,7 +266,7 @@ body {
   background-color: #d4d4f5;
 }
 #bordermargin{
-  margin-bottom: 1%;
+  margin-bottom: 5px;
 }
 #edit-items {
   position: relative;
@@ -283,7 +283,6 @@ body {
   height: 50%;
   color: black;
   font-size: 16pt;
-  background-color: #d6b95e;
   margin-left: 1%;
   margin-top: 1%;
 }
@@ -292,6 +291,9 @@ body {
   align-items: center;
   font-size: 48pt;
   height: 20%;
+  background-color: rgb(214, 185, 94);
+  text-align: center;
+  border-radius: 0.5rem;
 }
 #accordion{
   display: flex;
@@ -302,6 +304,13 @@ body {
   width: 100%;
   border: darkblue;
   display: flex;
+  padding-right: 5px;
+  padding-bottom: 3px;
+  padding-left: 2px;
+  padding-top: 1px;
+}
+#listitems{
+  background-color: #d6b95e;;
 }
 #itembox{
   background-color: darkblue;

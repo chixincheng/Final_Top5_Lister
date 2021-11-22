@@ -127,7 +127,8 @@ getTop5ListPairs = async (req, res) => {
                     like: list.like,
                     dislike: list.dislike,
                     view: list.view,
-                    publish: list.publish
+                    publish: list.publish,
+                    createdate: list.createdate
                 };
                 pairs.push(pair);
             }

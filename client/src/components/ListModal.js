@@ -31,7 +31,7 @@ export default function ListModal(props){
             </DialogTitle>
             <DialogContent id = "content-list-modal">
                 <Box id="createitembox">
-                    <div id="create-numbering" style={{backgroundColor: "#d6b95e"}}>
+                    <div id="create-numbering">
                         <Box id = "bordermargin">
                         <div id="item-number-border"><Typography variant="h3">1.</Typography></div>
                         </Box>
@@ -49,11 +49,11 @@ export default function ListModal(props){
                         </Box>
                     </div>
                     <div id = "creat-items">
-                        <TextField fullWidth id ="listitems"></TextField>
-                        <TextField fullWidth id ="listitems"></TextField>
-                        <TextField fullWidth id ="listitems"></TextField>
-                        <TextField fullWidth id ="listitems"></TextField>
-                        <TextField fullWidth id ="listitems"></TextField>
+                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
+                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
+                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
+                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
+                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
                     </div>
                     
                 </Box>
