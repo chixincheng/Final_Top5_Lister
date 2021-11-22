@@ -169,11 +169,22 @@ body {
   text-decoration-color: blue;
   color: blue;
 }
+#edit{
+  font-Size: 20pt;
+  text-decoration-line: underline;
+  text-decoration-color: red;
+  color: red;
+}
+#viewnum{
+  font-Size: 20pt;
+  color: red;
+  text-decoration-line: none;
+}
 #add-list-button {
   float: left;
 }
 #sortby-list-button{
-  left: 65%;
+  left: 37%;
 }
 #list-selector-list {
   position: absolute;
@@ -234,27 +245,95 @@ body {
 }
 
 #edit-numbering {
-  position: absolute;
   left: 0%;
-  top: 0%;
-  width: 20%;
-  height: 100%;
-  background-color: var(--swatch-status);
+  width: 10%;
+  height: 50%;
+  font-size: 16pt;
+}
+#create-numbering{
+  left: 0%;
+  width: 10%;
+  height: 50%;
+  font-size: 16pt;
+  margin-left: 1%;
+  margin-top: 1%;
+}
+#content-list-modal,
+#list-modal,
+#title-list-modal,
+#action-list-modal
+{
+  background-color: #d4d4f5;
+}
+#bordermargin{
+  margin-bottom: 1%;
+}
+#edit-items {
+  position: relative;
+  left: auto;
+  width: 10%;
+  height: 50%;
+  color: #d6b95e;
+  font-size: 16pt;
+}
+#creat-items{
+  position: relative;
+  left: auto;
+  width: 100%;
+  height: 50%;
+  color: black;
+  font-size: 16pt;
+  background-color: #d6b95e;
+  margin-left: 1%;
+  margin-top: 1%;
 }
 
-#edit-items {
-  position: absolute;
-  left: 20%;
-  top: 0%;
-  width: 80%;
-  height: 100%;
-  background-color: var(--swatch-primary);
+#item-number-border{
+  align-items: center;
+  font-size: 48pt;
+  height: 20%;
+}
+#accordion{
+  display: flex;
+}
+#createitembox{
+  background-color: darkblue;
+  height:50%;
+  width: 100%;
+  border: darkblue;
+  display: flex;
+}
+#itembox{
+  background-color: darkblue;
+  height:50%;
+  width: 50%;
+  border: darkblue;
+  display: flex;
+}
+#commentlistview{
+  height: 230px;
+  min-width: 400px;
+  left: 0%;
+  right: 0%;
+  background-color: darkcyan;
+  overflow-y: scroll;
+}
+#commentbox{
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+}
+#comments{
+  position: absolute;;
+}
+#add-comment{
+  background-color: white;
+  bottom: 0%;
 }
 
 .item-number,
 .top5-item,
 .top5-item-dragged-to {
-  display: flex;
   align-items: center;
   font-size: 48pt;
   height: 20%;
@@ -263,10 +342,8 @@ body {
 .item-number {
   justify-content: center;
   width: 100%;
-  border: 1px 0px 1px 1px;
-  border-color: black;
-  background-color: linen;
-  color: black;
+  background-color: darkblue;
+  color: #d6b95e;
 }
 
 input {

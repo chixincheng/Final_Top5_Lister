@@ -13,6 +13,9 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+import Top5Item from './Top5Item.js'
+import List from '@mui/material/List';
+
 /*
     This is a card in our list of top 5 lists. It lets select
     a list for editing and it has controls for changing its 
@@ -27,6 +30,35 @@ function ListCard(props) {
     const { idNamePair } = props;
     const [open, setOpen] = useState(false);
 
+    console.log(idNamePair);
+    let editItems =
+            <List id="edit-items" sx={{bgcolor: 'darkblue' }}>
+                {
+                    idNamePair.items.map((item, index) => (
+                        <Top5Item 
+                            key={'top5-item-' + (index+1)+item}
+                            text={item}
+                            index={index}
+                            color = '#d6b95e' 
+                        />
+                    ))
+                }
+            </List>;
+    let commentList =
+            <List id = "commentlistview"sx={{left: '1%', right: '1%', bgcolor: '#c4c4c4', height: "200px"}}>
+            {
+                idNamePair.comments.map((text) => (
+                    <div id = "comments">
+                        <TextField id = "Author">
+                            ({text}[0])
+                        </TextField>
+                        <TextField>
+                            ({text}[1])
+                        </TextField>
+                    </div>
+                ))
+            }
+            </List>;
     function handleClose (event){
         event.stopPropagation();
         setOpen(false);
@@ -67,9 +99,9 @@ function ListCard(props) {
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
+            setText(event.target.value);
             let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            store.addComment(id, text);
         }
     }
 
@@ -118,20 +150,29 @@ function ListCard(props) {
                                 Published: {}
                             </span>
                             :
-                            <span style = {{fontSize: '20pt', color: 'red', textDecoration: 'underline'}}>    
-                                Edit
+                            <span>    
+                                <s id='edit'
+                                    onClick={handleToggleEdit}
+                                >Edit</s>
                             </span>
                         }
                         
                     </div>
                 </Box>
+                
                 <Box sx={{ p: 1 }} style={{fontSize:'48pt'}}>
-                    <IconButton onClick={(event) => {
-                        handleLike(event, idNamePair._id)
-                    }} aria-label='delete'>
-                        <ThumbUpIcon style={{fontSize:'48pt'}} />
-                    </IconButton>
-                    {idNamePair.like}
+                    <div>
+                        <IconButton onClick={(event) => {
+                            handleLike(event, idNamePair._id)
+                        }} aria-label='delete'>
+                            <ThumbUpIcon style={{fontSize:'48pt'}} />
+                        </IconButton>
+                        {idNamePair.like}
+                        <br/>
+                        <span style = {{fontSize: '20pt'}}>    
+                                View: <s id = 'viewnum'>{idNamePair.view}</s>
+                        </span>
+                    </div>
                 </Box>
                 <Box sx={{ p: 1 }} style={{fontSize:'48pt'}}>
                     <IconButton onClick={(event) => {
@@ -149,11 +190,29 @@ function ListCard(props) {
                     </IconButton>
                 </Box>
             </AccordionSummary>
-            <AccordionDetails>
-                <Box sx={{ p: 1 }}>
-                    <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                        <EditIcon style={{fontSize:'48pt'}} />
-                    </IconButton>
+            <AccordionDetails id = "accordion">
+                <Box id="itembox">
+                    <div id="edit-numbering">
+                        <div className="item-number"><Typography variant="h3">1.</Typography></div>
+                        <div className="item-number"><Typography variant="h3">2.</Typography></div>
+                        <div className="item-number"><Typography variant="h3">3.</Typography></div>
+                        <div className="item-number"><Typography variant="h3">4.</Typography></div>
+                        <div className="item-number"><Typography variant="h3">5.</Typography></div>
+                    </div>
+                    {editItems}
+                </Box>
+                <Box id = "commentbox">
+                    {commentList}
+                    <TextField
+                        fullWidth
+                        id = "add-comment"
+                        label = "Add Comment"
+                        margin = "none"
+                        onKeyPress = {(event)=>{
+                            handleKeyPress(event)
+                        }}
+                    >
+                    </TextField>
                 </Box>
                 
             </AccordionDetails>
@@ -170,9 +229,6 @@ function ListCard(props) {
                 name="name"
                 autoComplete="Top 5 List Name"
                 className='list-card'
-                onKeyPress={handleKeyPress}
-                onBlur = {handleBlur}
-                onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
                 inputProps={{style: {fontSize: 48}}}
                 InputLabelProps={{style: {fontSize: 24}}}

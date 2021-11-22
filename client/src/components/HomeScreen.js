@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import { IconButton, Typography } from '@mui/material'
@@ -13,7 +13,7 @@ import Statusbar from './Statusbar'
 import TextField from '@mui/material/TextField';
 import SortIcon from '@mui/icons-material/Sort';
 import Box from '@mui/material/Box';
-
+import ListModal from './ListModal';
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -22,14 +22,43 @@ import Box from '@mui/material/Box';
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
     const {auth} = useContext(AuthContext)
-    
+    const [open, setOpen] = useState(false);
+
+    function handleClose (event){
+        event.stopPropagation();
+        setOpen(false);
+    };
+
     useEffect(() => {
         store.loadIdNamePairs();
     }, []);
 
-    function handleCreateNewList() {
-        store.createNewList();
+    function handleViewHomeList() {
+
     }
+
+    function handleViewAllList() {
+
+    }
+
+    function handleViewUserList() {
+
+    }
+
+    function handleViewCommunityList() {
+
+    }
+
+    function handleSortBy(){
+
+    }
+
+    function handleCreateNewList(event) {
+        event.stopPropagation();
+        setOpen(true);
+        //store.createNewList();
+    }
+
     let listCard = "";
     if (store) {
         console.log(store.idNamePairs)
@@ -54,7 +83,7 @@ const HomeScreen = () => {
                     aria-label="home"
                     id="home-list-button"
                     size = "large"
-                    onClick={handleCreateNewList}
+                    onClick={handleViewHomeList}
                 >
                     <HomeIcon />
                 </IconButton>
@@ -63,7 +92,7 @@ const HomeScreen = () => {
                     aria-label="All"
                     id="All-list-button"
                     size = "large"
-                    onClick={handleCreateNewList}
+                    onClick={handleViewAllList}
                 >
                     <GroupsIcon />
                 </IconButton>
@@ -72,7 +101,7 @@ const HomeScreen = () => {
                     aria-label="User"
                     id="User-list-button"
                     size = "large"
-                    onClick={handleCreateNewList}
+                    onClick={handleViewUserList}
                 >
                     <PersonIcon />
                 </IconButton>
@@ -81,25 +110,26 @@ const HomeScreen = () => {
                     aria-label="Community"
                     id="Community-list-button"
                     size = "large"
-                    onClick={handleCreateNewList}
+                    onClick={handleViewCommunityList}
                 >
                     <CommunityIcon />
                 </IconButton>
-                <box>
+                <Box style={{width: "40%"}}>
                     <TextField
+                        fullWidth
                         id = "search-key"
                         label = "search"
                         margin = "none"
                         style = {{ background: "white", top: "13%"}}
                     >
                     </TextField>
-                </box>
+                </Box>
                 <IconButton
                     color="inherit" 
                     aria-label="sortby"
                     id="sortby-list-button"
                     size = "large"
-                    onClick={handleCreateNewList}
+                    onClick={handleSortBy}
                 >
                     SORT BY <SortIcon/>
                 </IconButton>
@@ -112,7 +142,7 @@ const HomeScreen = () => {
             {auth.loginstatus () ?
                 <div id="home-footing">
                     <IconButton 
-                        color="primary" 
+                        color="inherit" 
                         aria-label="add"
                         id="add-list-button"
                         onClick={handleCreateNewList}
@@ -124,6 +154,7 @@ const HomeScreen = () => {
                 :
                 <Statusbar />
             }
+            <ListModal open = {open} close = {handleClose} name = "?"/>
         </div>)
 }
 
