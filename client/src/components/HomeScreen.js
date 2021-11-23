@@ -43,7 +43,7 @@ const HomeScreen = () => {
         setOpen(false);
     };
     function handleViewHomeList() {
-        store.loadIdNamePairs();
+        store.viewhomeList();
     }
 
     function handleViewAllList() {
@@ -56,6 +56,11 @@ const HomeScreen = () => {
 
     function handleViewCommunityList() {
 
+    }
+
+    function handleSearchKeyWord (event){
+        store.searchKey(event.target.value);
+        event.stopPropagation();
     }
 
     function handleCreateNewList(event) {
@@ -77,9 +82,6 @@ const HomeScreen = () => {
     }
     function handleSortByDislikes(){
         handleMenuClose();
-    }
-    function handleSearchKeyWord (event){
-        
     }
     const menulist = (
         <Menu
@@ -107,7 +109,6 @@ const HomeScreen = () => {
 
     let listCard = "";
     if (store) {
-        console.log(store.idNamePairs)
         listCard = 
             <List sx={{ width: '98%', left: '1%', right: '1%', bgcolor: '#c4c4c4' }}>
             {

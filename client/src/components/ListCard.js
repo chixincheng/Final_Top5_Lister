@@ -30,7 +30,6 @@ function ListCard(props) {
     const { idNamePair } = props;
     const [open, setOpen] = useState(false);
 
-    console.log(idNamePair);
     let editItems =
             <List id="edit-items" sx={{bgcolor: 'darkblue' }}>
                 {

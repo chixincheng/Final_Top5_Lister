@@ -27,7 +27,11 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    CHANGE_ITEM_NAME: "CHANGE_ITEM_NAME"
+    CHANGE_ITEM_NAME: "CHANGE_ITEM_NAME",
+    VIEW_HOME_LIST: "VIEW_HOME_LIST",
+    VIEW_ALL_LIST: "VIEW_ALL_LIST",
+    VIEW_USER_LIST: "VIEW_USER_LIST",
+    VIEW_COMMUNITY_LIST: "VIEW_COMMUNITY_LIST",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -46,7 +50,7 @@ function GlobalStoreContextProvider(props) {
         listMarkedForDeletion: null
     });
     const history = useHistory();
-
+    const [searchKey, setSearch] = useState("");
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
     const { auth } = useContext(AuthContext);
 
@@ -164,6 +168,46 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 });
             }
+            case GlobalStoreActionType.VIEW_HOME_LIST: {
+                return setStore({
+                    idNamePairs: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null
+                });
+            }
+            case GlobalStoreActionType.VIEW_ALL_LIST: {
+                return setStore({
+                    idNamePairs: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null
+                });
+            }
+            case GlobalStoreActionType.VIEW_USER_LIST: {
+                return setStore({
+                    idNamePairs: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null
+                });
+            }
+            case GlobalStoreActionType.VIEW_COMMUNITY_LIST: {
+                return setStore({
+                    idNamePairs: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null
+                });
+            }
             default:
                 return store;
         }
@@ -181,8 +225,6 @@ function GlobalStoreContextProvider(props) {
             if(auth.user.email === top5List.ownerEmail){
                 top5List.name = newName;
                 async function updateList(top5List) {
-                    console.log(top5List);
-                    console.log(top5List._id);
                     response = await api.updateTop5ListById(top5List._id, top5List);
                     if (response.data.success) {
                         async function getListPairs(top5List) {
@@ -313,6 +355,47 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
     }
+    store.searchKey = function (key) {
+        setSearch(key);
+        console.log(key);
+        console.log("search key"+searchKey);
+        store.viewhomeList();
+    }
+    function filterBySearchKey(list){
+        if(auth.user != null){
+            if(searchKey === ""){
+                return true;
+            }
+            else if(list.name.includes(searchKey)){
+                return true;
+            }
+        }
+        else{//view as guest, return all list then filter to get community list
+            return true;
+        }
+        return false;
+    }
+    //view home user list
+    store.viewhomeList = async function () {
+        const response = await api.getTop5ListPairs();
+        if (response.data.success) {
+            let allpairsArray = response.data.idNamePairs;
+            let pairsArray = allpairsArray.filter(filterByownerEmail);
+            console.log(searchKey);
+            console.log("previe "+pairsArray);
+            let finalArray = pairsArray.filter(filterBySearchKey);
+            console.log("final "+finalArray);
+            storeReducer({
+                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                payload: finalArray
+            });
+        }
+        else {
+            console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
+
+    //add comment to list
     store.addComment = async function () {
         
     }
