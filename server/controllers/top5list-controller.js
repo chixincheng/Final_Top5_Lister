@@ -61,6 +61,7 @@ updateTop5List = async (req, res) => {
         top5List.view = body.view
         top5List.publish = body.publish
         top5List.createdate = body.createdate
+        top5List.viewing = body.viewing
 
         top5List
             .save()

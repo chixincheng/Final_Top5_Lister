@@ -47,15 +47,15 @@ const HomeScreen = () => {
     }
 
     function handleViewAllList() {
-        store.viewalllist();
+        store.viewallList();
     }
 
     function handleViewUserList() {
-        store.viewuserlist();
+        store.viewuserList();
     }
 
     function handleViewCommunityList() {
-        store.viewcommunitylist();
+        store.viewcommunityList();
     }
 
     function handleSearchKeyWord (event){

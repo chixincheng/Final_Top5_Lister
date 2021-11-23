@@ -365,6 +365,65 @@ function GlobalStoreContextProvider(props) {
         }
         asyncChangeListName(id);
     }
+    store.increaseview = function (id){
+        console.log("enter");
+        async function asyncChangeListName(id) {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                if(top5List.viewing === false){
+                    top5List.view = top5List.view + 1;
+                    top5List.viewing = !(top5List.viewing);
+                    async function updateList(top5List) {
+                        response = await api.updateTop5ListById(top5List._id, top5List);
+                        if (response.data.success) {
+                            async function getListPairs(top5List) {
+                                response = await api.getTop5ListPairs();
+                                if (response.data.success) {
+                                    let allpairsArray = response.data.idNamePairs;
+                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                    storeReducer({
+                                        type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                        payload: {
+                                            idNamePairs: pairsArray,
+                                            top5List: top5List
+                                        }
+                                    });
+                                }
+                            }
+                            getListPairs(top5List);
+                        }
+                    }
+                    updateList(top5List);
+                }
+                else{
+                    top5List.viewing = !(top5List.viewing);
+                    async function updateList(top5List) {
+                        response = await api.updateTop5ListById(top5List._id, top5List);
+                        if (response.data.success) {
+                            async function getListPairs(top5List) {
+                                response = await api.getTop5ListPairs();
+                                if (response.data.success) {
+                                    let allpairsArray = response.data.idNamePairs;
+                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                    storeReducer({
+                                        type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                        payload: {
+                                            idNamePairs: pairsArray,
+                                            top5List: top5List
+                                        }
+                                    });
+                                }
+                            }
+                            getListPairs(top5List);
+                        }
+                    }
+                    updateList(top5List);
+                }
+            }
+        }
+        asyncChangeListName(id);
+    }
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
         storeReducer({
@@ -388,7 +447,8 @@ function GlobalStoreContextProvider(props) {
             dislike: 0,
             view: 0,
             publish: false,
-            createdate: new Date()
+            createdate: new Date(),
+            viewing: false
         };
         const response = await api.createTop5List(payload);
         if (response.data.success) {

@@ -121,12 +121,16 @@ function ListCard(props) {
         event.stopPropagation();
         store.disLikeList(id);
     }
+    function handleUpdateView(id){
+        store.increaseview(id);
+    }
     let cardElement =
         <Accordion>
             <AccordionSummary
                 id={idNamePair._id}
                 key={idNamePair._id}
                 expandIcon = {<ExpandMoreIcon/>}
+                onClick = {()=>{handleUpdateView(idNamePair._id)}}
                 sx={{ marginTop: '15px', display: 'flex', p: 1 }}
                 style={{
                     width: '100%'

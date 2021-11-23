@@ -12,7 +12,8 @@ const Top5ListSchema = new Schema(
         dislike: {type: Number, required: true},
         view: {type: Number, required: true},
         publish: {type: Boolean, required: true},
-        createdate: {type: Date, required: true}
+        createdate: {type: Date, required: true},
+        viewing: {type: Boolean, required: false}
     },
     { timestamps: true },
 )
