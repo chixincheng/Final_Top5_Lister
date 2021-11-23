@@ -47,26 +47,30 @@ const HomeScreen = () => {
     }
 
     function handleViewAllList() {
-
+        store.viewalllist();
     }
 
     function handleViewUserList() {
-
+        store.viewuserlist();
     }
 
     function handleViewCommunityList() {
-
+        store.viewcommunitylist();
     }
 
     function handleSearchKeyWord (event){
-        store.searchKey(event.target.value);
-        event.stopPropagation();
+        if(event.code === "Enter"){
+            store.searchKey(event.target.value);
+        }
     }
 
     function handleCreateNewList(event) {
         event.stopPropagation();
         setOpen(true);
-        //store.createNewList();
+    }
+    function createListCallBack(){
+        store.createNewList();
+        setOpen(false);
     }
     function handleSortByNewestDate(){
         handleMenuClose();
@@ -125,15 +129,27 @@ const HomeScreen = () => {
     return (
         <div id="home-selector">
             <div id="home-heading">
-                <IconButton 
-                    color="inherit"
-                    aria-label="home"
-                    id="home-list-button"
-                    size = "large"
-                    onClick={handleViewHomeList}
-                >
-                    <HomeIcon />
-                </IconButton>
+                { auth.guest ?
+                    <IconButton 
+                        color="inherit"
+                        aria-label="home"
+                        id="home-list-button"
+                        size = "large"
+                        disabled
+                    >
+                        <HomeIcon />
+                    </IconButton>
+                    :
+                    <IconButton 
+                        color="inherit"
+                        aria-label="home"
+                        id="home-list-button"
+                        size = "large"
+                        onClick={handleViewHomeList}
+                    >
+                        <HomeIcon />
+                    </IconButton>
+                }
                 <IconButton 
                     color="inherit" 
                     aria-label="All"
@@ -167,7 +183,7 @@ const HomeScreen = () => {
                         id = "search-key"
                         label = "search"
                         margin = "none"
-                        onChange = {handleSearchKeyWord}
+                        onKeyPress = {handleSearchKeyWord}
                         style = {{ background: "white", top: "13%"}}
                     >
                     </TextField>
@@ -205,7 +221,12 @@ const HomeScreen = () => {
                 :
                 <Statusbar />
             }
-            <ListModal open = {open} close = {handleClose} name = "?"/>
+            <ListModal 
+            open = {open} 
+            close = {handleClose} 
+            name = "?"
+            createNewList = {createListCallBack}
+            />
             {menulist}
         </div>)
 }

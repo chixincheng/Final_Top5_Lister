@@ -113,12 +113,12 @@ function ListCard(props) {
     function handleUpdateText(event) {
         setText(event.target.value);
     }
-    function handleLike(event) {
-        let id = event.target.id.substring("list-".length);
+    function handleLike(event, id) {
+        event.stopPropagation();
         store.likeList(id);
     }
-    function handleDislike(event) {
-        let id = event.target.id.substring("list-".length);
+    function handleDislike(event, id) {
+        event.stopPropagation();
         store.disLikeList(id);
     }
     let cardElement =

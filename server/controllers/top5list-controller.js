@@ -53,6 +53,15 @@ updateTop5List = async (req, res) => {
 
         top5List.name = body.name
         top5List.items = body.items
+        top5List.ownerEmail = body.ownerEmail
+        top5List.comments = body.comments
+        top5List.Author = body.Author
+        top5List.like = body.like
+        top5List.dislike = body.dislike
+        top5List.view = body.view
+        top5List.publish = body.publish
+        top5List.createdate = body.createdate
+
         top5List
             .save()
             .then(() => {
@@ -61,6 +70,13 @@ updateTop5List = async (req, res) => {
                     success: true,
                     id: top5List._id,
                     message: 'Top 5 List updated!',
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'Top 5 List not updated!',
                 })
             })
     })

@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 export default function ListModal(props){
-    const {open,close,name,confirm} = props;
+    const {open,createNewList,name,close} = props;
     //keypress
     return(
         <Dialog
@@ -60,7 +60,7 @@ export default function ListModal(props){
             </DialogContent>
             <DialogActions id = "action-list-modal">
                     <Button 
-                        onClick={close}
+                        onClick={createNewList}
                         style = {{backgroundColor: "#c4c4c4", color: "black", fontWeight: "bold"}}
                     >Save</Button>
                     <Button 

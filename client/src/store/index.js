@@ -47,7 +47,11 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listNameActive: false,
         itemActive: false,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        viewhomelist: false,
+        viewuserlist: false,
+        viewalllist: false,
+        viewcommunitylist: false
     });
     const history = useHistory();
     const [searchKey, setSearch] = useState("");
@@ -175,7 +179,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    viewhomelist: true,
+                    viewuserlist: false,
+                    viewalllist: false,
+                    viewcommunitylist: false
                 });
             }
             case GlobalStoreActionType.VIEW_ALL_LIST: {
@@ -185,7 +193,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    viewhomelist: false,
+                    viewuserlist: false,
+                    viewalllist: true,
+                    viewcommunitylist: false
                 });
             }
             case GlobalStoreActionType.VIEW_USER_LIST: {
@@ -195,7 +207,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    viewhomelist: false,
+                    viewuserlist: true,
+                    viewalllist: false,
+                    viewcommunitylist: false
                 });
             }
             case GlobalStoreActionType.VIEW_COMMUNITY_LIST: {
@@ -205,7 +221,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    viewhomelist: false,
+                    viewuserlist: false,
+                    viewalllist: false,
+                    viewcommunitylist: true
                 });
             }
             default:
@@ -282,10 +302,68 @@ function GlobalStoreContextProvider(props) {
         asyncChangeListName(id);
     }
     store.likeList = function(id){
-
+        async function asyncChangeListName(id) {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                top5List.like = top5List.like + 1;
+                async function updateList(top5List) {
+                    response = await api.updateTop5ListById(top5List._id, top5List);
+                    if (response.data.success) {
+                        async function getListPairs(top5List) {
+                            response = await api.getTop5ListPairs();
+                            if (response.data.success) {
+                                let allpairsArray = response.data.idNamePairs;
+                                let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                storeReducer({
+                                    type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                    payload: {
+                                        idNamePairs: pairsArray,
+                                        top5List: top5List
+                                    }
+                                });
+                            }
+                        }
+                        getListPairs(top5List);
+                    }
+                }
+                updateList(top5List);
+                
+            }
+        }
+        asyncChangeListName(id);
     }
     store.disLikeList = function(id){
-
+        async function asyncChangeListName(id) {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                top5List.dislike = top5List.dislike + 1;
+                async function updateList(top5List) {
+                    response = await api.updateTop5ListById(top5List._id, top5List);
+                    if (response.data.success) {
+                        async function getListPairs(top5List) {
+                            response = await api.getTop5ListPairs();
+                            if (response.data.success) {
+                                let allpairsArray = response.data.idNamePairs;
+                                let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                storeReducer({
+                                    type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                    payload: {
+                                        idNamePairs: pairsArray,
+                                        top5List: top5List
+                                    }
+                                });
+                            }
+                        }
+                        getListPairs(top5List);
+                    }
+                }
+                updateList(top5List);
+                
+            }
+        }
+        asyncChangeListName(id);
     }
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
@@ -323,7 +401,8 @@ function GlobalStoreContextProvider(props) {
             );
 
             // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-            history.push("/top5list/" + newList._id);
+            store.viewhomeList();
+            history.push("/");
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
@@ -356,21 +435,28 @@ function GlobalStoreContextProvider(props) {
         }
     }
     store.searchKey = function (key) {
+        //how to search immediately
         setSearch(key);
         console.log(key);
         console.log("search key"+searchKey);
-        store.viewhomeList();
+        if(store.viewhomelist){
+            store.viewhomeList();
+        }
+        else if (store.viewalllist){
+            store.viewallList();
+        }
+        else if (store.viewuserList){
+            store.viewuserList();
+        }
+        else if (store.viewcommunitylist){
+            store.viewcommunityList();
+        }
     }
     function filterBySearchKey(list){
-        if(auth.user != null){
-            if(searchKey === ""){
-                return true;
-            }
-            else if(list.name.includes(searchKey)){
-                return true;
-            }
+        if(searchKey === ""){
+            return true;
         }
-        else{//view as guest, return all list then filter to get community list
+        else if(list.name.includes(searchKey)){
             return true;
         }
         return false;
@@ -394,7 +480,66 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
     }
-
+    //view all the list
+    store.viewallList = async function () {
+        const response = await api.getTop5ListPairs();
+        if (response.data.success) {
+            let allpairsArray = response.data.idNamePairs;
+            storeReducer({
+                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                payload: allpairsArray
+            });
+        }
+        else {
+            console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
+    function filterBySearchKeyUser(list){
+        if(searchKey === ""){
+            return false;
+        }
+        else if(list.Author.includes(searchKey)){
+            return true;
+        }
+        return false;
+    }
+    //view user list
+    store.viewuserList = async function () {
+        const response = await api.getTop5ListPairs();
+        if (response.data.success) {
+            let allpairsArray = response.data.idNamePairs;
+            let finalArray = allpairsArray.filter(filterBySearchKeyUser);
+            storeReducer({
+                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                payload: finalArray
+            });
+        }
+        else {
+            console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
+    function filterPublish(list){
+        if(list.publish){
+            return true;
+        }
+        return false;
+    }
+    // view community list
+    store.viewcommunityList = async function () {
+        const response = await api.getTop5ListPairs();
+        if (response.data.success) {
+            let allpairsArray = response.data.idNamePairs;
+            let pairsArray = allpairsArray.filter(filterPublish);
+            let finalArray = pairsArray.filter(filterBySearchKey);
+            storeReducer({
+                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                payload: finalArray
+            });
+        }
+        else {
+            console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
     //add comment to list
     store.addComment = async function () {
         
