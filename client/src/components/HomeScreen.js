@@ -68,25 +68,32 @@ const HomeScreen = () => {
         event.stopPropagation();
         setOpen(true);
     }
+
     function createListCallBack(payload){
         store.createNewList(payload);
         setOpen(false);
     }
+
     function handleSortByNewestDate(){
         handleMenuClose();
     }
+    
     function handleSortByOldestDate(){
         handleMenuClose();
     }
+
     function handleSortByViews(){
         handleMenuClose();
     }
+
     function handleSortByLikes(){
         handleMenuClose();
     }
+
     function handleSortByDislikes(){
         handleMenuClose();
     }
+
     const menulist = (
         <Menu
             anchorEl={anchorEl}

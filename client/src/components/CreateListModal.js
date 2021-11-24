@@ -1,4 +1,4 @@
-import React, { useContext} from 'react'
+import React, { useContext, useState} from 'react'
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
@@ -11,26 +11,47 @@ import { GlobalStoreContext } from '../store'
 
 export default function CreateListModal(props){
     const { store } = useContext(GlobalStoreContext);
+    const [ change, setChange] = useState(false);
     const {open,createNewList,close} = props;
 
     let payload = {
         name : "Untitled" + store.newListCounter,
-        items: ["?", "?", "?", "?", "?"],
+        items: ["", "", "", "", ""],
         comments: [],
         like: 0,
         dislike: 0,
         view: 0,
         publish: false,
         createdate: new Date(),
-        viewing: false
+        viewing: false,
+        publishdate: null
     };
+
     function handleOnChange (event){
         let sourceId = event.target.id;
         let id = sourceId.substring(sourceId.indexOf("-") + 1);
         payload.items[id] = event.target.value;
+        let ct = 0 ;
+        for (let i = 0; i < payload.items.length; i++) {
+            if(payload.items[i] === ""){
+                ct = ct+1;
+            }
+        }
+        if(ct === 0){
+            setChange(true);
+        }
+        else{
+            setChange(false);
+        }
     }
+
     function handleNameChange(event){
         payload.name = event.target.value;
+    }
+
+    function handlePublish(){
+        payload.publishdate = new Date();
+        createNewList(payload);
     }
     return(
         <Dialog
@@ -96,10 +117,18 @@ export default function CreateListModal(props){
                         onClick= {()=>{createNewList(payload)}}
                         style = {{backgroundColor: "#c4c4c4", color: "black", fontWeight: "bold"}}
                     >Save</Button>
-                    <Button 
-                        onClick={close}
+                    {change ?
+                        <Button 
+                        onClick={handlePublish}
                         style = {{backgroundColor: "#c4c4c4", color: "black", fontWeight: "bold"}}
-                    >Publish</Button>
+                        >Publish</Button>
+                        :
+                        <Button 
+                        disabled
+                        className = "top5-button-disabled"
+                        style = {{backgroundColor: "#c4c4c4", color: "black", fontWeight: "bold"}}
+                        >Publish</Button>
+                    }
             </DialogActions>
         </Dialog>
     )

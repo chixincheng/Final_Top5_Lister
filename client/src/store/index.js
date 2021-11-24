@@ -280,6 +280,8 @@ function GlobalStoreContextProvider(props) {
                 if(auth.user.email === top5List.ownerEmail){
                     top5List.items = payload.items;
                     top5List.name = payload.name;
+                    top5List.publish = payload.publish;
+                    top5List.publishdate = payload.publishdate;
                     async function updateList(top5List) {
                         response = await api.updateTop5ListById(top5List._id, top5List);
                         if (response.data.success) {

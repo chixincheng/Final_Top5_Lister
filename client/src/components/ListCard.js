@@ -148,15 +148,13 @@ function ListCard(props) {
                         <br/>
                         <br/>
                         {idNamePair.publish ?
-                            <span style = {{fontSize: '20pt'}}>    
-                                Published: {}
+                            <span>
+                            Published:   <s id = 'published-date'>{idNamePair.publishdate}</s>
                             </span>
                             :
-                            <span>    
-                                <s id='edit'
-                                    onClick={handleToggleEdit}
-                                >Edit</s>
-                            </span>
+                            <s id='edit'
+                            onClick={handleToggleEdit}
+                            >Edit</s>
                         }
                         
                     </div>
