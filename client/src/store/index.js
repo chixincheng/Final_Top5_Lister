@@ -237,13 +237,16 @@ function GlobalStoreContextProvider(props) {
     // DRIVE THE STATE OF THE APPLICATION. WE'LL CALL THESE IN 
     // RESPONSE TO EVENTS INSIDE OUR COMPONENTS.
 
-    // THIS FUNCTION PROCESSES CHANGING A LIST NAME
-    store.changeListName = async function (id, newName) {
+    //add comment to list
+    store.addComment = async function (id, comment) {
         let response = await api.getTop5ListById(id);
         if (response.data.success) {
             let top5List = response.data.top5List;
-            if(auth.user.email === top5List.ownerEmail){
-                top5List.name = newName;
+            if(auth.loggedIn){
+                console.log("adding comment")
+                let author = auth.user.lastName + " " + auth.user.firstName;
+                let commenttoadd = [author,comment];
+                top5List.comments.unshift(commenttoadd);
                 async function updateList(top5List) {
                     response = await api.updateTop5ListById(top5List._id, top5List);
                     if (response.data.success) {
@@ -268,39 +271,7 @@ function GlobalStoreContextProvider(props) {
             }
         }
     }
-    store.changeItemtName = function(id,NewName,index){
-        async function asyncChangeListName(id) {
-            let response = await api.getTop5ListById(id);
-            if (response.data.success) {
-                let top5List = response.data.top5List;
-                if(auth.user.email === top5List.ownerEmail){
-                    top5List.items[index] = NewName;
-                    async function updateList(top5List) {
-                        response = await api.updateTop5ListById(top5List._id, top5List);
-                        if (response.data.success) {
-                            async function getListPairs(top5List) {
-                                response = await api.getTop5ListPairs();
-                                if (response.data.success) {
-                                    let allpairsArray = response.data.idNamePairs;
-                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
-                                    storeReducer({
-                                        type: GlobalStoreActionType.CHANGE_ITEM_NAME,
-                                        payload: {
-                                            idNamePairs: pairsArray,
-                                            top5List: top5List
-                                        }
-                                    });
-                                }
-                            }
-                            getListPairs(top5List);
-                        }
-                    }
-                    updateList(top5List);
-                }
-            }
-        }
-        asyncChangeListName(id);
-    }
+    //edit list
     store.editList = function(payload,id){
         async function asyncEditList(id) {
             let response = await api.getTop5ListById(id);
@@ -335,6 +306,7 @@ function GlobalStoreContextProvider(props) {
         }
         asyncEditList(id);
     }
+    //Increase like count
     store.likeList = function(id){
         async function asyncLikeList(id) {
             let response = await api.getTop5ListById(id);
@@ -367,6 +339,7 @@ function GlobalStoreContextProvider(props) {
         }
         asyncLikeList(id);
     }
+    //Increase dislike count
     store.disLikeList = function(id){
         async function asyncDisLikeList(id) {
             let response = await api.getTop5ListById(id);
@@ -399,8 +372,8 @@ function GlobalStoreContextProvider(props) {
         }
         asyncDisLikeList(id);
     }
+    //Increase view count
     store.increaseview = function (id){
-        console.log("enter");
         async function asyncIncreaseView(id) {
             let response = await api.getTop5ListById(id);
             if (response.data.success) {
@@ -623,10 +596,6 @@ function GlobalStoreContextProvider(props) {
         else {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
-    }
-    //add comment to list
-    store.addComment = async function () {
-        
     }
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
     // OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE

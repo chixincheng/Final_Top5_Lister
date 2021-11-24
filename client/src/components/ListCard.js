@@ -25,11 +25,11 @@ import EditListModal from './EditListModal.js';
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const [text, setText] = useState("");
     const { idNamePair } = props;
     const [deleteopen, setDeleteOpen] = useState(false);
     const [editopen, setEditOpen] = useState(false);
-    
+    const [backgroundColor, setColor] = useState("white")
+
     let editItems =
             <List id="edit-items" sx={{bgcolor: 'darkblue' }}>
                 {
@@ -44,16 +44,17 @@ function ListCard(props) {
                 }
             </List>;
     let commentList =
-            <List id = "commentlistview"sx={{left: '1%', right: '1%', bgcolor: '#c4c4c4', height: "200px"}}>
+            <List id = "commentlistview"sx={{left: '1%', right: '1%', height: "200px"}}>
             {
-                idNamePair.comments.map((text) => (
-                    <div id = "comments">
-                        <TextField id = "Author">
-                            ({text}[0])
-                        </TextField>
-                        <TextField>
-                            ({text}[1])
-                        </TextField>
+                idNamePair.comments.map((text, index) => (
+                    <div id = "comments" key = {"comment-list "+index} 
+                        style ={{color: "black", height: "25%", width: "100%", backgroundColor: "yellow"}}
+                    >
+                        <s  id = 'Author' style ={{fontSize: "14pt"}}
+                        >{text[0]}</s>
+                        <br/>
+                        <s style = {{fontSize: "24pt", textDecoration: "none"}}
+                        >{text[1]}</s>
                     </div>
                 ))
             }
@@ -95,16 +96,9 @@ function ListCard(props) {
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            setText(event.target.value);
-            let id = event.target.id.substring("list-".length);
-            store.addComment(id, text);
+            let text = event.target.value;
+            store.addComment(idNamePair._id, text);
         }
-    }
-
-    function handleBlur(event){
-        let id = event.target.id.substring("list-".length);
-        store.changeListName(id, text);
-        //toggleEdit();
     }
     
     function handleLike(event, id) {
@@ -119,10 +113,18 @@ function ListCard(props) {
     
     function handleUpdateView(id){
         store.increaseview(id);
+        if(backgroundColor === "#d4d4f5"){
+            setColor("white");
+        }
+        else{
+            setColor("#d4d4f5")
+        }
     }
 
     let cardElement =
-        <Accordion>
+        <Accordion id = "accordion"
+            style = {{backgroundColor: backgroundColor}}
+        >
             <AccordionSummary
                 id={idNamePair._id}
                 key={idNamePair._id}
@@ -190,7 +192,7 @@ function ListCard(props) {
                     </IconButton>
                 </Box>
             </AccordionSummary>
-            <AccordionDetails id = "accordion">
+            <AccordionDetails id = "accordion-detail">
                 <Box id="itembox">
                     <div id="edit-numbering">
                         <div className="item-number"><Typography variant="h3">1.</Typography></div>
@@ -208,9 +210,8 @@ function ListCard(props) {
                         id = "add-comment"
                         label = "Add Comment"
                         margin = "none"
-                        onKeyPress = {(event)=>{
-                            handleKeyPress(event)
-                        }}
+                        style = {{backgroundColor: "white"}}
+                        onKeyPress = {handleKeyPress}
                     >
                     </TextField>
                 </Box>

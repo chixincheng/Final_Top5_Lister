@@ -295,7 +295,7 @@ body {
   text-align: center;
   border-radius: 0.5rem;
 }
-#accordion{
+#accordion-detail{
   display: flex;
 }
 #createitembox{
@@ -320,11 +320,11 @@ body {
   display: flex;
 }
 #commentlistview{
+  padding: 0;
   height: 230px;
   min-width: 400px;
   left: 0%;
   right: 0%;
-  background-color: darkcyan;
   overflow-y: scroll;
 }
 #commentbox{
@@ -333,7 +333,7 @@ body {
   flex-direction: column;
 }
 #comments{
-  position: absolute;;
+  position: relative;;
 }
 #add-comment{
   background-color: white;

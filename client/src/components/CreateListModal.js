@@ -16,6 +16,7 @@ export default function CreateListModal(props){
     let payload = {
         name : "Untitled" + store.newListCounter,
         items: ["?", "?", "?", "?", "?"],
+        comments: [],
         like: 0,
         dislike: 0,
         view: 0,
