@@ -39,6 +39,7 @@ export default function EditListModal(props){
         payload.publish = true;
         payload.publishdate = new Date();
         EditList(payload)
+        setChange(false);
     }
 
     return(

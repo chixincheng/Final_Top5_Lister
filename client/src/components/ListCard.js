@@ -121,6 +121,16 @@ function ListCard(props) {
         }
     }
 
+    function datestring(){
+        if(idNamePair.publish){
+            let d = new Date(idNamePair.publishdate);
+            let month = d.toLocaleString('default', {month: 'short'});
+            let date = d.getDate();
+            let year = d.getFullYear();
+            return month+" "+date+","+year;
+        }
+    }
+    
     let cardElement =
         <Accordion id = "accordion"
             style = {{backgroundColor: backgroundColor}}
@@ -149,7 +159,8 @@ function ListCard(props) {
                         <br/>
                         {idNamePair.publish ?
                             <span>
-                            Published:   <s id = 'published-date'>{idNamePair.publishdate}</s>
+                            Published:   <s id = 'published-date' style = {{textDecoration: "none", color: "green"}}
+                            >{datestring()}</s>
                             </span>
                             :
                             <s id='edit'

@@ -50,8 +50,11 @@ export default function CreateListModal(props){
     }
 
     function handlePublish(){
+        payload.publish = true;
         payload.publishdate = new Date();
+        console.log(payload.publishdate.toDateString());
         createNewList(payload);
+        setChange(false);
     }
     return(
         <Dialog
