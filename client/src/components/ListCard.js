@@ -28,18 +28,20 @@ function ListCard(props) {
     const { idNamePair } = props;
     const [deleteopen, setDeleteOpen] = useState(false);
     const [editopen, setEditOpen] = useState(false);
-    const [backgroundColor, setColor] = useState("white")
+
+    const backgroundColor = idNamePair.publish?"#d4d4f5":"white";
 
     let editItems =
-            <List id="edit-items" sx={{bgcolor: 'darkblue' }}>
+            <List id="edit-items">
                 {
                     idNamePair.items.map((item, index) => (
-                        <Top5Item 
+                        <Typography 
                             key={'top5-item-' + (index+1)+item}
-                            text={item}
-                            index={index}
-                            color = '#d6b95e' 
-                        />
+                            color = '#d6b95e'
+                            variant = "h3"
+                        >
+                            {item}
+                        </Typography>
                     ))
                 }
             </List>;
@@ -113,12 +115,6 @@ function ListCard(props) {
     
     function handleUpdateView(id){
         store.increaseview(id);
-        if(backgroundColor === "#d4d4f5"){
-            setColor("white");
-        }
-        else{
-            setColor("#d4d4f5")
-        }
     }
 
     function datestring(){
@@ -130,6 +126,7 @@ function ListCard(props) {
             return month+" "+date+","+year;
         }
     }
+    
     
     let cardElement =
         <Accordion id = "accordion"
