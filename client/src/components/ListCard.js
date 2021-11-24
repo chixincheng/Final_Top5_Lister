@@ -3,7 +3,6 @@ import { GlobalStoreContext } from '../store'
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteModal from './DeleteModal';
 import Accordion from '@mui/material/Accordion';
@@ -15,6 +14,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import Top5Item from './Top5Item.js'
 import List from '@mui/material/List';
+import EditListModal from './EditListModal.js';
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -25,11 +25,11 @@ import List from '@mui/material/List';
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
     const { idNamePair } = props;
-    const [open, setOpen] = useState(false);
-
+    const [deleteopen, setDeleteOpen] = useState(false);
+    const [editopen, setEditOpen] = useState(false);
+    
     let editItems =
             <List id="edit-items" sx={{bgcolor: 'darkblue' }}>
                 {
@@ -58,42 +58,39 @@ function ListCard(props) {
                 ))
             }
             </List>;
-    function handleClose (event){
+    function handleDeleteClose (event){
         event.stopPropagation();
-        setOpen(false);
+        setDeleteOpen(false);
         store.unmarkListForDeletion();
     };
 
+    function handleEditClose (event){
+        event.stopPropagation();
+        setEditOpen(false);
+    };
+
+    function EditListCallBack(payload){
+        store.editList(payload,idNamePair._id);
+        setEditOpen(false);
+    }
+
     function handleCloseConfirm(event){
         event.stopPropagation();
-        setOpen(false);
+        setDeleteOpen(false);
         store.deleteMarkedList();
     }
 
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         //make delete modal pop up
-        setOpen(true);
+        setDeleteOpen(true);
         store.markListForDeletion(id);
     }
-    function handleLoadList(event, id) {
-        if (!event.target.disabled) {
-            // CHANGE THE CURRENT LIST
-            store.setCurrentList(id);
-        }
-    }
+    
 
     function handleToggleEdit(event) {
         event.stopPropagation();
-        toggleEdit();
-    }
-
-    function toggleEdit() {
-        let newActive = !editActive;
-        if (newActive) {
-            store.setIsListNameEditActive();
-        }
-        setEditActive(newActive);
+        setEditOpen(true);
     }
 
     function handleKeyPress(event) {
@@ -107,23 +104,23 @@ function ListCard(props) {
     function handleBlur(event){
         let id = event.target.id.substring("list-".length);
         store.changeListName(id, text);
-        toggleEdit();
+        //toggleEdit();
     }
     
-    function handleUpdateText(event) {
-        setText(event.target.value);
-    }
     function handleLike(event, id) {
         event.stopPropagation();
         store.likeList(id);
     }
+
     function handleDislike(event, id) {
         event.stopPropagation();
         store.disLikeList(id);
     }
+    
     function handleUpdateView(id){
         store.increaseview(id);
     }
+
     let cardElement =
         <Accordion>
             <AccordionSummary
@@ -219,25 +216,9 @@ function ListCard(props) {
                 </Box>
                 
             </AccordionDetails>
-                <DeleteModal open = {open} close = {handleClose} name = {idNamePair.name} confirm = {handleCloseConfirm}/>
+                <DeleteModal open = {deleteopen} close = {handleDeleteClose} name = {idNamePair.name} confirm = {handleCloseConfirm}/>
+                <EditListModal open = {editopen} close = {handleEditClose} EditList =  {EditListCallBack} payload = {idNamePair}/>
         </Accordion>
-    if (editActive) {
-        cardElement =
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                id={"list-" + idNamePair._id}
-                label="Top 5 List Name"
-                name="name"
-                autoComplete="Top 5 List Name"
-                className='list-card'
-                defaultValue={idNamePair.name}
-                inputProps={{style: {fontSize: 48}}}
-                InputLabelProps={{style: {fontSize: 24}}}
-                autoFocus
-            />
-    }
     return (
         cardElement
     );

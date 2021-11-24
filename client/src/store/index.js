@@ -301,8 +301,42 @@ function GlobalStoreContextProvider(props) {
         }
         asyncChangeListName(id);
     }
+    store.editList = function(payload,id){
+        async function asyncEditList(id) {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                if(auth.user.email === top5List.ownerEmail){
+                    top5List.items = payload.items;
+                    top5List.name = payload.name;
+                    async function updateList(top5List) {
+                        response = await api.updateTop5ListById(top5List._id, top5List);
+                        if (response.data.success) {
+                            async function getListPairs(top5List) {
+                                response = await api.getTop5ListPairs();
+                                if (response.data.success) {
+                                    let allpairsArray = response.data.idNamePairs;
+                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                    storeReducer({
+                                        type: GlobalStoreActionType.CHANGE_ITEM_NAME,
+                                        payload: {
+                                            idNamePairs: pairsArray,
+                                            top5List: top5List
+                                        }
+                                    });
+                                }
+                            }
+                            getListPairs(top5List);
+                        }
+                    }
+                    updateList(top5List);
+                }
+            }
+        }
+        asyncEditList(id);
+    }
     store.likeList = function(id){
-        async function asyncChangeListName(id) {
+        async function asyncLikeList(id) {
             let response = await api.getTop5ListById(id);
             if (response.data.success) {
                 let top5List = response.data.top5List;
@@ -331,10 +365,10 @@ function GlobalStoreContextProvider(props) {
                 
             }
         }
-        asyncChangeListName(id);
+        asyncLikeList(id);
     }
     store.disLikeList = function(id){
-        async function asyncChangeListName(id) {
+        async function asyncDisLikeList(id) {
             let response = await api.getTop5ListById(id);
             if (response.data.success) {
                 let top5List = response.data.top5List;
@@ -363,11 +397,11 @@ function GlobalStoreContextProvider(props) {
                 
             }
         }
-        asyncChangeListName(id);
+        asyncDisLikeList(id);
     }
     store.increaseview = function (id){
         console.log("enter");
-        async function asyncChangeListName(id) {
+        async function asyncIncreaseView(id) {
             let response = await api.getTop5ListById(id);
             if (response.data.success) {
                 let top5List = response.data.top5List;
@@ -422,7 +456,7 @@ function GlobalStoreContextProvider(props) {
                 }
             }
         }
-        asyncChangeListName(id);
+        asyncIncreaseView(id);
     }
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
@@ -436,20 +470,10 @@ function GlobalStoreContextProvider(props) {
     }
 
     // THIS FUNCTION CREATES A NEW LIST
-    store.createNewList = async function () {
-        let newListName = "Untitled" + store.newListCounter;
-        let payload = {
-            name: newListName,
-            items: ["?", "?", "?", "?", "?"],
-            ownerEmail: auth.user.email,
-            Author: auth.user.lastName + " " + auth.user.firstName,
-            like: 0,
-            dislike: 0,
-            view: 0,
-            publish: false,
-            createdate: new Date(),
-            viewing: false
-        };
+    store.createNewList = async function (payload) {
+        payload.ownerEmail = auth.user.email;
+        payload.Author = auth.user.lastName + " " + auth.user.firstName;
+        
         const response = await api.createTop5List(payload);
         if (response.data.success) {
             tps.clearAllTransactions();

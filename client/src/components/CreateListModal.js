@@ -1,3 +1,4 @@
+import React, { useContext} from 'react'
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
@@ -6,10 +7,30 @@ import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { GlobalStoreContext } from '../store'
 
-export default function ListModal(props){
-    const {open,createNewList,name,close} = props;
-    //keypress
+export default function CreateListModal(props){
+    const { store } = useContext(GlobalStoreContext);
+    const {open,createNewList,close} = props;
+
+    let payload = {
+        name : "Untitled" + store.newListCounter,
+        items: ["?", "?", "?", "?", "?"],
+        like: 0,
+        dislike: 0,
+        view: 0,
+        publish: false,
+        createdate: new Date(),
+        viewing: false
+    };
+    function handleOnChange (event){
+        let sourceId = event.target.id;
+        let id = sourceId.substring(sourceId.indexOf("-") + 1);
+        payload.items[id] = event.target.value;
+    }
+    function handleNameChange(event){
+        payload.name = event.target.value;
+    }
     return(
         <Dialog
             id = "listmodal"
@@ -23,7 +44,8 @@ export default function ListModal(props){
                         fullWidth
                         variant="standard"
                         style = {{ background: "white"}}
-                        defaultValue = {name}
+                        onChange = {handleNameChange}
+                        defaultValue = {payload.name}
                         // onKeyPress = {(event)=>{
                         //     KeyPress(event)
                         // }}
@@ -49,18 +71,28 @@ export default function ListModal(props){
                         </Box>
                     </div>
                     <div id = "creat-items">
-                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
-                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
-                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
-                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
-                        <TextField fullWidth id ="listitems" style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden"}}></TextField>
+                        <TextField fullWidth id ="listitems-0" defaultValue = {payload.items[0]} onChange = {handleOnChange}
+                            style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden", color: "black", fontSize: "48pt", backgroundColor: "#d6b95e"}}>
+                        </TextField>
+                        <TextField fullWidth id ="listitems-1" defaultValue = {payload.items[1]} onChange = {handleOnChange}
+                            style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden", color: "black", fontSize: "48pt", backgroundColor: "#d6b95e"}}>
+                        </TextField>
+                        <TextField fullWidth id ="listitems-2" defaultValue = {payload.items[2]} onChange = {handleOnChange}
+                            style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden", color: "black", fontSize: "48pt", backgroundColor: "#d6b95e"}}>
+                        </TextField>
+                        <TextField fullWidth id ="listitems-3" defaultValue = {payload.items[3]} onChange = {handleOnChange}
+                            style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden", color: "black", fontSize: "48pt", backgroundColor: "#d6b95e"}}> 
+                        </TextField>
+                        <TextField fullWidth id ="listitems-4" defaultValue = {payload.items[4]} onChange = {handleOnChange}
+                            style = {{marginBottom: "5px", borderRadius: "0.5rem", overflow: "hidden", color: "black", fontSize: "48pt", backgroundColor: "#d6b95e"}}>
+                        </TextField>
                     </div>
                     
                 </Box>
             </DialogContent>
             <DialogActions id = "action-list-modal">
                     <Button 
-                        onClick={createNewList}
+                        onClick= {()=>{createNewList(payload)}}
                         style = {{backgroundColor: "#c4c4c4", color: "black", fontWeight: "bold"}}
                     >Save</Button>
                     <Button 

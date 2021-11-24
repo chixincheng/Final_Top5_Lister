@@ -13,7 +13,7 @@ import Statusbar from './Statusbar'
 import TextField from '@mui/material/TextField';
 import SortIcon from '@mui/icons-material/Sort';
 import Box from '@mui/material/Box';
-import ListModal from './ListModal';
+import CreateListModal from './CreateListModal';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useHistory } from 'react-router-dom'
@@ -68,8 +68,8 @@ const HomeScreen = () => {
         event.stopPropagation();
         setOpen(true);
     }
-    function createListCallBack(){
-        store.createNewList();
+    function createListCallBack(payload){
+        store.createNewList(payload);
         setOpen(false);
     }
     function handleSortByNewestDate(){
@@ -221,11 +221,10 @@ const HomeScreen = () => {
                 :
                 <Statusbar />
             }
-            <ListModal 
+            <CreateListModal 
             open = {open} 
             close = {handleClose} 
-            name = "?"
-            createNewList = {createListCallBack}
+            createNewList =  {createListCallBack}
             />
             {menulist}
         </div>)
