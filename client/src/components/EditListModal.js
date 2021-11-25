@@ -61,6 +61,7 @@ export default function EditListModal(props){
             payload.publishdate = new Date();
             EditList(payload)
             setChange(false);
+            store.createOrEditCommunityList(payload);
         }
         else{
             setMessage("User can not publish two list with the same name");

@@ -555,6 +555,97 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO CREATE A NEW LIST");
         }
     }
+
+    // THIS FUNCTION CREATES A NEW COMMUNITY LIST
+    store.createCommunityList = async function (payload) {
+        const response = await api.createTop5List(payload);
+        if (response.data.success) {
+            let newList = response.data.top5List;
+            storeReducer({
+                type: GlobalStoreActionType.CREATE_NEW_LIST,
+                payload: newList
+            }
+            );
+        }
+        else {
+            console.log("API FAILED TO CREATE A NEW LIST");
+        }
+    }
+
+    store.editCommunityList = function(payload,id){
+        async function asynceditCommunityList(id) {
+            let response = await api.getTop5ListById(id);
+            if (response.data.success) {
+                let top5List = response.data.top5List;
+                top5List.updateDate = new Date();
+                let score = 5;
+                for(let i = 0; i < allpairsArray.commentItems.length; i++){
+                    let communityitems = [allpairsArray.commentItems[i][0],allpairsArray.commentItems[i][1]];
+                    payload.commentItems.unshift(communityitems)
+                    score = score--;
+                }
+                
+                async function updateList(top5List) {
+                    response = await api.updateTop5ListById(top5List._id, top5List);
+                    if (response.data.success) {
+                        async function getListPairs(top5List) {
+                            response = await api.getTop5ListPairs();
+                            if (response.data.success) {
+                                let allpairsArray = response.data.idNamePairs;
+                                let pairsArray = store.viewList(allpairsArray);
+                                pairsArray = store.sorts(pairsArray);
+                                storeReducer({
+                                    type: GlobalStoreActionType.CHANGE_ITEM_NAME,
+                                    payload: {
+                                        idNamePairs: pairsArray,
+                                        top5List: top5List
+                                    }
+                                });
+                            }
+                        }
+                        getListPairs(top5List);
+                    }
+                }
+                updateList(top5List);
+                
+            }
+        }
+        asynceditCommunityList(id);
+    }
+
+    //Create or Edit existing community list
+    store.createOrEditCommunityList = async function(payload){
+        //check if such community already exist
+        const response = await api.getCommunityList();
+        if (response.data.success) {
+            let allpairsArray = response.data.idNamePairs;//all community list
+            let exist = false;
+            for(let i = 0; i < allpairsArray.length; i++){
+                if(allpairsArray[i].name === payload.name){
+                    exist = true;
+                }
+            }
+            if(exist){//update current community list
+                let id = payload._id;
+                store.editCommunityList(payload,id);
+            }
+            else{//create a new community list
+                payload.isCommunityList = true;
+                payload.updateDate = new Date();
+                let score = 5;
+                for(let i = 0; i < allpairsArray.items.length; i++){
+                    let communityitems = [allpairsArray.items[i],score];
+                    payload.commentItems.unshift(communityitems)
+                    score = score--;
+                }
+                store.createCommunityList(payload);
+            }
+        }
+        else {
+            console.log("API FAILED TO GET THE LIST PAIRS");
+        }
+    }
+
     function filterByownerEmail(list){
         if(auth.user != null){
             if(list.ownerEmail === auth.user.email){
@@ -707,10 +798,12 @@ function GlobalStoreContextProvider(props) {
     }
     // view community list
     store.viewcommunityList = async function () {
+        //load community list
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
             let pairsArray = allpairsArray.filter(filterPublish);
+            //let commlist = store.calculatecommunitylist(pairsArray);
             let finalArray = pairsArray.filter(filterBySearchKey);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_COMMUNITY_LIST,
@@ -721,6 +814,7 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
     }
+
     store.sorts = function(pairsArray){
         if(store.sortbynewest){
             return pairsArray.sort(function(a,b){

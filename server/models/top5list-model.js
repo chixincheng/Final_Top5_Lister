@@ -14,7 +14,10 @@ const Top5ListSchema = new Schema(
         publish: {type: Boolean, required: true},
         publishdate: {type: Date, required: false},
         createdate: {type: Date, required: true},
-        viewing: {type: Boolean, required: false}
+        viewing: {type: Boolean, required: false},
+        isCommunityList: {type: Boolean, required: false},
+        updateDate: {type: Date, required: false},
+        commentItems: { type: [[String,Number]], required: false }
     },
     { timestamps: true },
 )

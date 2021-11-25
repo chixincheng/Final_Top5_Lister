@@ -74,6 +74,7 @@ export default function CreateListModal(props){
             console.log(payload.publishdate.toDateString());
             createNewList(payload);
             setChange(false);
+            store.createOrEditCommunityList(payload);
         }
         else{
             setMessage("User can not publish two list with the same name");

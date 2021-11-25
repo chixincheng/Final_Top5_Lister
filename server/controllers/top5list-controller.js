@@ -63,6 +63,9 @@ updateTop5List = async (req, res) => {
         top5List.createdate = body.createdate
         top5List.viewing = body.viewing
         top5List.publishdate = body.publishdate
+        top5List.isCommunityList = body.isCommunityList
+        top5List.updateDate = body.updateDate
+        top5List.commentItems = body.commentItems
 
         top5List
             .save()
@@ -148,6 +151,9 @@ getTop5ListPairs = async (req, res) => {
                     publish: list.publish,
                     createdate: list.createdate,
                     publishdate: list.publishdate,
+                    isCommunityList: list.isCommunityList,
+                    updateDate: list.updateDate,
+                    commentItems: list.commentItems
                 };
                 pairs.push(pair);
             }
@@ -156,6 +162,44 @@ getTop5ListPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+getCommunityList = async (req, res) => {
+    await Top5List.find({ }, (err, top5Lists) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!top5Lists) {
+            console.log("!top5Lists.length");
+            return res
+                .status(404)
+                .json({ success: false, error: 'Top 5 Lists not found' })
+        }
+        else {
+            // PUT ALL THE LISTS INTO ID, NAME PAIRS
+            let pairs = [];
+            for (let key in top5Lists) {
+                let list = top5Lists[key];
+                if(list.isCommunityList){
+                    let pair = {
+                        _id: list._id,
+                        name: list.name,
+                        comments: list.comments,
+                        like: list.like,
+                        dislike: list.dislike,
+                        view: list.view,
+                        publish: list.publish,
+                        createdate: list.createdate,
+                        publishdate: list.publishdate,
+                        isCommunityList: list.isCommunityList,
+                        updateDate: list.updateDate,
+                        commentItems: list.commentItems
+                    };
+                    pairs.push(pair);
+                }
+            }
+            return res.status(200).json({ success: true, idNamePairs: pairs })
+        }
+    }).catch(err => console.log(err))
+}
 
 module.exports = {
     createTop5List,
@@ -163,5 +207,6 @@ module.exports = {
     deleteTop5List,
     getTop5Lists,
     getTop5ListPairs,
-    getTop5ListById
+    getTop5ListById,
+    getCommunityList
 }
