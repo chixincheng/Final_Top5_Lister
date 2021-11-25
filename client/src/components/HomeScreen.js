@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import { IconButton, Typography } from '@mui/material'
@@ -222,7 +222,6 @@ const HomeScreen = () => {
                     color="inherit" 
                     aria-label="sortby"
                     id="sortby-list-button"
-                    aria-label="sortby"
                     aria-controls="primary-search-account-menu"
                     aria-haspopup="true"
                     size = "large"

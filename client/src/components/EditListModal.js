@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react'
+import React, { useState} from 'react'
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
@@ -7,7 +7,6 @@ import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { GlobalStoreContext } from '../store'
 
 export default function EditListModal(props){
     const [change, setChange] = useState(false);

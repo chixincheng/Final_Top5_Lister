@@ -819,10 +819,10 @@ function GlobalStoreContextProvider(props) {
             return pairsArray.sort(function(a,b){return b.like - a.like});
         }
         else if(store.sortbydislike){
-            return pairsArray.sort(function(a,b){return b.dislike-a.dislike})
+            return pairsArray.sort(function(a,b){return b.dislike - a.dislike})
         }
         else if(store.sortbyview){
-            return pairsArray.sort(function(a,b){return b.view-a.view})
+            return pairsArray.sort(function(a,b){return b.view - a.view})
         }
         return pairsArray
     }
@@ -858,7 +858,7 @@ function GlobalStoreContextProvider(props) {
     store.sortByViews = function(){
         let pairs = store.idNamePairs.sort(function(a,b){return b.view - a.view});
         storeReducer({
-            type: GlobalStoreActionType.SORT_BY_LIKE,
+            type: GlobalStoreActionType.SORT_BY_VIEW,
             payload: pairs
         });
     }

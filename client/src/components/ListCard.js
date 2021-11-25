@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
-import Top5Item from './Top5Item.js'
 import List from '@mui/material/List';
 import EditListModal from './EditListModal.js';
 
