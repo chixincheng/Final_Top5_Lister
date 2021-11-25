@@ -215,7 +215,7 @@ const HomeScreen = () => {
                     listCard
                 }
             </div>
-            {auth.loginstatus () ?
+            {store.viewhomelist ?
                 <div id="home-footing">
                     {store.viewhomelist?
                         <IconButton 
@@ -225,6 +225,7 @@ const HomeScreen = () => {
                             onClick={handleCreateNewList}
                         >
                             <AddIcon />
+                            <Typography variant="h4">Your Lists</Typography>
                         </IconButton>
                         :
                         <IconButton 
@@ -234,9 +235,9 @@ const HomeScreen = () => {
                             disabled
                         >
                             <AddIcon />
+                            <Typography variant="h4">Your Lists</Typography>
                         </IconButton>
                     }
-                    <Typography variant="h4">Your Lists</Typography>
                 </div>
                 :
                 <Statusbar />

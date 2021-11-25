@@ -9,12 +9,14 @@ import AuthContext from '../auth'
     @author McKilla Gorilla
 */
 function Statusbar() {
-    const { store } = useContext(GlobalStoreContext);
-    const { auth } = useContext(AuthContext);
+    const { store} = useContext(GlobalStoreContext);
 
     let text ="";
-    if (store.currentList && auth.loggedIn)
-        text = store.currentList.name;
+    if (store.viewalllist){
+        if(store.searchkey !== ""){
+            text = store.searchkey+" Lists";
+        }
+    }
 
     return (
         <div 

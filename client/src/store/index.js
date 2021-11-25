@@ -21,9 +21,6 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
-    SET_CURRENT_LIST: "SET_CURRENT_LIST",
-    SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     CHANGE_ITEM_NAME: "CHANGE_ITEM_NAME",
     VIEW_HOME_LIST: "VIEW_HOME_LIST",
     VIEW_ALL_LIST: "VIEW_ALL_LIST",
@@ -42,10 +39,7 @@ function GlobalStoreContextProvider(props) {
     // THESE ARE ALL THE THINGS OUR DATA STORE WILL MANAGE
     const [store, setStore] = useState({
         idNamePairs: [],
-        currentList: null,
         newListCounter: 0,
-        listNameActive: false,
-        itemActive: false,
         listMarkedForDeletion: null,
         viewhomelist: false,
         viewuserlist: false,
@@ -58,7 +52,7 @@ function GlobalStoreContextProvider(props) {
         sortbyview: false
     });
     const history = useHistory();
-    const [searchKey, setSearch] = useState("");
+    const [searchKeyWord, setSearch] = useState("");
     // SINCE WE'VE WRAPPED THE STORE IN THE AUTH CONTEXT WE CAN ACCESS THE USER HERE
     const { auth } = useContext(AuthContext);
 
@@ -71,10 +65,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
                 return setStore({
                     idNamePairs: payload.idNamePairs,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -90,10 +81,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CHANGE_ITEM_NAME:{
                 return setStore({
                     idNamePairs: payload.idNamePairs,
-                    currentList: payload.top5List,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -110,10 +98,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -130,10 +115,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.CREATE_NEW_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: payload,
                     newListCounter: store.newListCounter + 1,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -150,10 +132,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -170,10 +149,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: payload,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -190,70 +166,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.UNMARK_LIST_FOR_DELETION: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
-                    listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomelist,
-                    viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewalllist,
-                    viewcommunitylist: store.viewcommunitylist,
-                    sortbynewest: store.sortbynewest,
-                    sortbyoldest: store.sortbyoldest,
-                    sortbylike: store.sortbylike,
-                    sortbydislike: store.sortbydislike,
-                    sortbyview: store.sortbyview
-                });
-            }
-            // UPDATE A LIST
-            case GlobalStoreActionType.SET_CURRENT_LIST: {
-                return setStore({
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
-                    listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomelist,
-                    viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewalllist,
-                    viewcommunitylist: store.viewcommunitylist,
-                    sortbynewest: store.sortbynewest,
-                    sortbyoldest: store.sortbyoldest,
-                    sortbylike: store.sortbylike,
-                    sortbydislike: store.sortbydislike,
-                    sortbyview: store.sortbyview
-                });
-            }
-            // START EDITING A LIST ITEM
-            case GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE: {
-                return setStore({
-                    idNamePairs: store.idNamePairs,
-                    currentList: store.currentList,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: true,
-                    listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomelist,
-                    viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewalllist,
-                    viewcommunitylist: store.viewcommunitylist,
-                    sortbynewest: store.sortbynewest,
-                    sortbyoldest: store.sortbyoldest,
-                    sortbylike: store.sortbylike,
-                    sortbydislike: store.sortbydislike,
-                    sortbyview: store.sortbyview
-                });
-            }
-            // START EDITING A LIST NAME
-            case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
-                return setStore({
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
-                    newListCounter: store.newListCounter,
-                    isListNameEditActive: true,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -269,10 +182,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.VIEW_HOME_LIST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: true,
                     viewuserlist: false,
@@ -288,10 +198,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.VIEW_ALL_LIST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: false,
                     viewuserlist: false,
@@ -307,10 +214,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.VIEW_USER_LIST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: false,
                     viewuserlist: true,
@@ -326,10 +230,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.VIEW_COMMUNITY_LIST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: false,
                     viewuserlist: false,
@@ -345,10 +246,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.SORT_BY_LIKE: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -364,10 +262,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.SORT_BY_DISLIKE: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -383,10 +278,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.SORT_BY_NEWEST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -402,10 +294,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.SORT_BY_OLDEST: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -421,10 +310,7 @@ function GlobalStoreContextProvider(props) {
             case GlobalStoreActionType.SORT_BY_VIEW: {
                 return setStore({
                     idNamePairs: payload,
-                    currentList: null,
                     newListCounter: store.newListCounter,
-                    isListNameEditActive: false,
-                    isItemEditActive: false,
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
@@ -708,18 +594,25 @@ function GlobalStoreContextProvider(props) {
         else if (store.viewcommunitylist){
             store.viewcommunityList();
         }
-    },[searchKey]);
+    },[searchKeyWord]);
 
     store.searchKey = function (key) {
         //how to search immediately
         setSearch(key);
     }
 
-    function filterBySearchKey(list){
-        if(searchKey === ""){
+    function filterByPublish(list){
+        if(list.publish){
             return true;
         }
-        else if(list.name.includes(searchKey)){
+        return false;
+    }
+
+    function filterBySearchKey(list){
+        if(searchKeyWord === ""){
+            return true;
+        }
+        else if(list.name.includes(searchKeyWord)){
             return true;
         }
         return false;
@@ -764,9 +657,11 @@ function GlobalStoreContextProvider(props) {
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
+            let pairsArray = allpairsArray.filter(filterByPublish);
+            let finalArray = pairsArray.filter(filterBySearchKey);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_ALL_LIST,
-                payload: allpairsArray
+                payload: finalArray
             });
         }
         else {
@@ -774,10 +669,10 @@ function GlobalStoreContextProvider(props) {
         }
     }
     function filterBySearchKeyUser(list){
-        if(searchKey === ""){
+        if(searchKeyWord === ""){
             return false;
         }
-        else if(list.Author.includes(searchKey)){
+        else if(list.Author.includes(searchKeyWord)){
             return true;
         }
         return false;
@@ -787,7 +682,8 @@ function GlobalStoreContextProvider(props) {
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
-            let finalArray = allpairsArray.filter(filterBySearchKeyUser);
+            let pairsArray = allpairsArray.filter(filterByPublish);
+            let finalArray = pairsArray.filter(filterBySearchKeyUser);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_USER_LIST,
                 payload: finalArray
@@ -934,57 +830,7 @@ function GlobalStoreContextProvider(props) {
         });
     }
 
-    // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
-    // OF A LIST, WHICH INCLUDES DEALING WITH THE TRANSACTION STACK. THE
-    // FUNCTIONS ARE setCurrentList, addMoveItemTransaction, addUpdateItemTransaction,
-    // moveItem, updateItem, updateCurrentList, undo, and redo
-    store.setCurrentList = async function (id) {
-        let response = await api.getTop5ListById(id);
-        if (response.data.success) {
-            if(response.data.top5List.ownerEmail === auth.user.email){
-                let top5List = response.data.top5List;
-                response = await api.updateTop5ListById(top5List._id, top5List);
-                if (response.data.success) {
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: top5List
-                    });
-                    history.push("/top5list/" + top5List._id);
-                }
-            }
-        }
-    }
-
-    store.updateItem = function (index, newItem) {
-        store.currentList.items[index] = newItem;
-        store.updateCurrentList();
-    }
-
-    store.updateCurrentList = async function () {
-        const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
-        if (response.data.success) {
-            storeReducer({
-                type: GlobalStoreActionType.SET_CURRENT_LIST,
-                payload: store.currentList
-            });
-        }
-    }
-
-    // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
-    store.setIsListNameEditActive = function () {
-        storeReducer({
-            type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
-            payload: null
-        });
-    }
-
-    // THIS FUNCTION ENABLES THE PROCESS OF EDITING AN ITEM
-    store.setIsItemEditActive = function () {
-        storeReducer({
-            type: GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE,
-            payload: null
-        });
-    }
+    store.searchkey = searchKeyWord;
 
     return (
         <GlobalStoreContext.Provider value={{
