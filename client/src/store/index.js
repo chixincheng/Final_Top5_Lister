@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
@@ -493,13 +493,11 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
     }
-    store.searchKey = function (key) {
-        //how to search immediately
-        setSearch(key);
-        console.log(key);
-        console.log("search key"+searchKey);
+    useEffect(() => {
         if(store.viewhomelist){
+            console.log(store.idNamePairs)
             store.viewhomeList();
+            console.log(store.idNamePairs)
         }
         else if (store.viewalllist){
             store.viewallList();
@@ -510,7 +508,13 @@ function GlobalStoreContextProvider(props) {
         else if (store.viewcommunitylist){
             store.viewcommunityList();
         }
+    },[searchKey]);
+
+    store.searchKey = function (key) {
+        //how to search immediately
+        setSearch(key);
     }
+
     function filterBySearchKey(list){
         if(searchKey === ""){
             return true;

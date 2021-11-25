@@ -59,9 +59,7 @@ const HomeScreen = () => {
     }
 
     function handleSearchKeyWord (event){
-        if(event.code === "Enter"){
-            store.searchKey(event.target.value);
-        }
+        store.searchKey(event.target.value);
     }
 
     function handleCreateNewList(event) {
@@ -190,7 +188,7 @@ const HomeScreen = () => {
                         id = "search-key"
                         label = "search"
                         margin = "none"
-                        onKeyPress = {handleSearchKeyWord}
+                        onChange = {handleSearchKeyWord}
                         style = {{ background: "white", top: "13%"}}
                     >
                     </TextField>

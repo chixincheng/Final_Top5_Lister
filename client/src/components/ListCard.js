@@ -37,7 +37,6 @@ function ListCard(props) {
                     idNamePair.items.map((item, index) => (
                         <Typography 
                             key={'top5-item-' + (index+1)+item}
-                            color = '#d6b95e'
                             variant = "h3"
                         >
                             {item}
@@ -50,7 +49,7 @@ function ListCard(props) {
             {
                 idNamePair.comments.map((text, index) => (
                     <div id = "comments" key = {"comment-list "+index} 
-                        style ={{color: "black", height: "25%", width: "100%", backgroundColor: "yellow"}}
+                        style ={{color: "black", height: "25%", width: "100%", backgroundColor: "#d4af37"}}
                     >
                         <s  id = 'Author' style ={{fontSize: "14pt"}}
                         >{text[0]}</s>
@@ -100,6 +99,7 @@ function ListCard(props) {
         if (event.code === "Enter") {
             let text = event.target.value;
             store.addComment(idNamePair._id, text);
+            event.target.value = "";
         }
     }
     
@@ -216,7 +216,7 @@ function ListCard(props) {
                         id = "add-comment"
                         label = "Add Comment"
                         margin = "none"
-                        style = {{backgroundColor: "white"}}
+                        style = {{backgroundColor: "white", borderRadius: "0.5rem"}}
                         onKeyPress = {handleKeyPress}
                     >
                     </TextField>
