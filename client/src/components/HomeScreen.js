@@ -96,7 +96,7 @@ const HomeScreen = () => {
         <Menu
             anchorEl={anchorEl}
             anchorOrigin={{
-                vertical: 'top',
+                vertical: 'bottom',
                 horizontal: 'right',
             }}
             id="primary-search-account-menu"

@@ -130,7 +130,7 @@ function ListCard(props) {
     
     let cardElement =
         <Accordion id = "accordion"
-            style = {{backgroundColor: backgroundColor}}
+            style = {{backgroundColor: backgroundColor, borderRadius: "1rem", position: "unset"}}
         >
             <AccordionSummary
                 id={idNamePair._id}
