@@ -16,17 +16,21 @@ import Box from '@mui/material/Box';
 import CreateListModal from './CreateListModal';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useHistory } from 'react-router-dom'
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
 /*
     This React component lists all the top5 lists in the UI.
     
     @author McKilla Gorilla
 */
 const HomeScreen = () => {
-    const history = useHistory();
     const { store } = useContext(GlobalStoreContext);
     const {auth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
+    const [messageopen, setMessageOpen] = useState(false);
+    const [message, setMessage] = useState("");
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
@@ -67,29 +71,50 @@ const HomeScreen = () => {
         setOpen(true);
     }
 
+    function handleMessageClose(){
+        setMessageOpen(false);
+    }
+
     function createListCallBack(payload){
-        store.createNewList(payload);
-        setOpen(false);
+        let create = true;
+        for(let i =0; i<store.idNamePairs.length; i++){
+            if(store.idNamePairs[i].name === payload.name){
+                create = false;
+            }
+        }
+        if(create){
+            store.createNewList(payload);
+            setOpen(false);
+        }
+        else{
+            setMessage("User can not have two list with same name");
+            setMessageOpen(true);
+        }
     }
 
     function handleSortByNewestDate(){
-        handleMenuClose();
+        store.sortByNewest();
+        setAnchorEl(null);
     }
     
     function handleSortByOldestDate(){
-        handleMenuClose();
+        store.sortByOldest();
+        setAnchorEl(null);
     }
 
     function handleSortByViews(){
-        handleMenuClose();
+        store.sortByViews();
+        setAnchorEl(null);
     }
 
     function handleSortByLikes(){
-        handleMenuClose();
+        store.sortByLikes();
+        setAnchorEl(null);
     }
 
     function handleSortByDislikes(){
-        handleMenuClose();
+        store.sortByDislikes();
+        setAnchorEl(null);
     }
 
     const menulist = (
@@ -231,6 +256,19 @@ const HomeScreen = () => {
             close = {handleClose} 
             createNewList =  {createListCallBack}
             />
+            <Dialog
+                id = "message-modal"
+                maxWidth='sm'
+                open= {messageopen}
+                onClose={handleMessageClose}
+                >
+                <DialogTitle>
+                    {message}
+                    <DialogActions>
+                        <Button onClick={handleMessageClose}>Okay</Button>
+                    </DialogActions>
+                </DialogTitle>
+            </Dialog>
             {menulist}
         </div>)
 }

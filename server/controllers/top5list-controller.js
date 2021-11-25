@@ -156,6 +156,7 @@ getTop5ListPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+
 module.exports = {
     createTop5List,
     updateTop5List,
