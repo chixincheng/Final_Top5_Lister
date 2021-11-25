@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 import { Typography } from '@mui/material'
-import AuthContext from '../auth'
 
 /*
     Our Status bar React component goes at the bottom of our UI.
@@ -12,10 +11,13 @@ function Statusbar() {
     const { store} = useContext(GlobalStoreContext);
 
     let text ="";
-    if (store.viewalllist){
+    if (store.viewalllist || store.viewuserlist){
         if(store.searchkey !== ""){
             text = store.searchkey+" Lists";
         }
+    }
+    else if (store.viewcommunitylist){
+        text = "Community Lists"
     }
 
     return (

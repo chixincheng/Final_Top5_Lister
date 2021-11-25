@@ -30,9 +30,20 @@ function ListCard(props) {
 
     const backgroundColor = idNamePair.publish?"#d4d4f5":"white";
 
+
+
     let editItems =
             <List id="edit-items">
-                {
+                {store.viewcommunitylist ?
+                    idNamePair.items.map((item, index) => (
+                        <Typography 
+                            key={'top5-item-' + (index+1)+item}
+                            variant = "h3"
+                        >
+                            {item+"111"}
+                        </Typography>
+                    ))
+                    :
                     idNamePair.items.map((item, index) => (
                         <Typography 
                             key={'top5-item-' + (index+1)+item}
@@ -50,10 +61,10 @@ function ListCard(props) {
                     <div id = "comments" key = {"comment-list "+index} 
                         style ={{color: "black", height: "25%", width: "100%", backgroundColor: "#d4af37"}}
                     >
-                        <s  id = 'Author' style ={{fontSize: "14pt"}}
+                        <s  id = 'Author' style ={{fontSize: "14pt", marginLeft: "2%"}}
                         >{text[0]}</s>
                         <br/>
-                        <s style = {{fontSize: "24pt", textDecoration: "none"}}
+                        <s style = {{fontSize: "24pt", textDecoration: "none", marginLeft: "2%"}}
                         >{text[1]}</s>
                     </div>
                 ))
@@ -126,6 +137,12 @@ function ListCard(props) {
         }
     }
     
+    function updatepublish(){
+        if(store.viewcommunitylist){
+            return "Updated:";
+        }
+        return "Published:";
+    }
     
     let cardElement =
         <Accordion id = "accordion"
@@ -148,14 +165,21 @@ function ListCard(props) {
                         </span>
                         <br/>
                         <br/>
-                        <span style = {{fontSize: '20pt'}}>    
-                            By: <s id = 'Author'>{idNamePair.Author}</s>
-                        </span>
+                        {store.viewcommunitylist?
+                            <span style = {{fontSize: '20pt'}}>    
+                                 <s id = 'Author'></s>
+                            </span>
+                            :
+                            <span style = {{fontSize: '20pt'}}>    
+                                By: <s id = 'Author'>{idNamePair.Author}</s>
+                            </span>
+                        }
                         <br/>
                         <br/>
+                    
                         {idNamePair.publish ?
-                            <span>
-                            Published:   <s id = 'published-date' style = {{textDecoration: "none", color: "green"}}
+                            <span style = {{fontSize: "20pt"}}>
+                            {updatepublish()}   <s id = 'published-date' style = {{textDecoration: "none", color: "green"}}
                             >{datestring()}</s>
                             </span>
                             :

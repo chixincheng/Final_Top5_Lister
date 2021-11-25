@@ -626,13 +626,19 @@ function GlobalStoreContextProvider(props) {
             return finalArray;
         }
         else if (store.viewalllist){
-            return allpairsArray;
+            let pairsArray = allpairsArray.filter(filterByPublish);
+            let finalArray = pairsArray.filter(filterBySearchKey);
+            return finalArray;
         }
-        else if (store.viewuserList){
-            return allpairsArray.filter(filterBySearchKeyUser);
+        else if (store.viewuserlist){
+            let pairsArray = allpairsArray.filter(filterByPublish);
+            let finalArray = pairsArray.filter(filterBySearchKeyUser);
+            return finalArray;
         }
         else if (store.viewcommunitylist){
-            //store.viewcommunityList();
+            let pairsArray = allpairsArray.filter(filterPublish);
+            let finalArray = pairsArray.filter(filterBySearchKey);
+            return finalArray;
         }
     }
 
