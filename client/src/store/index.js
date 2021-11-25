@@ -76,7 +76,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -95,7 +95,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -115,7 +115,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -135,7 +135,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -155,7 +155,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -175,7 +175,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: payload,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -195,7 +195,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -215,7 +215,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -235,7 +235,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: true,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -255,7 +255,7 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: true,
                     isItemEditActive: false,
                     listMarkedForDeletion: null,
-                    viewhomelist: store.viewhomeList,
+                    viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
                     viewalllist: store.viewalllist,
                     viewcommunitylist: store.viewcommunitylist,
@@ -462,7 +462,7 @@ function GlobalStoreContextProvider(props) {
                             response = await api.getTop5ListPairs();
                             if (response.data.success) {
                                 let allpairsArray = response.data.idNamePairs;
-                                let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                let pairsArray = store.viewList(allpairsArray);
                                 pairsArray = store.sorts(pairsArray);
                                 storeReducer({
                                     type: GlobalStoreActionType.CHANGE_LIST_NAME,
@@ -498,7 +498,7 @@ function GlobalStoreContextProvider(props) {
                                 response = await api.getTop5ListPairs();
                                 if (response.data.success) {
                                     let allpairsArray = response.data.idNamePairs;
-                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                    let pairsArray = store.viewList(allpairsArray);
                                     pairsArray = store.sorts(pairsArray);
                                     storeReducer({
                                         type: GlobalStoreActionType.CHANGE_ITEM_NAME,
@@ -532,8 +532,8 @@ function GlobalStoreContextProvider(props) {
                             response = await api.getTop5ListPairs();
                             if (response.data.success) {
                                 let allpairsArray = response.data.idNamePairs;
-                                let pairsArray = allpairsArray.filter(filterByownerEmail);
-                                pairsArray = store.sorts(pairsArray);
+                                let pairsArray = store.viewList(allpairsArray);
+                                pairsArray = store.sorts(pairsArray);   
                                 storeReducer({
                                     type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                     payload: {
@@ -566,7 +566,7 @@ function GlobalStoreContextProvider(props) {
                             response = await api.getTop5ListPairs();
                             if (response.data.success) {
                                 let allpairsArray = response.data.idNamePairs;
-                                let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                let pairsArray = store.viewList(allpairsArray);
                                 pairsArray = store.sorts(pairsArray);
                                 storeReducer({
                                     type: GlobalStoreActionType.CHANGE_LIST_NAME,
@@ -602,7 +602,7 @@ function GlobalStoreContextProvider(props) {
                                 response = await api.getTop5ListPairs();
                                 if (response.data.success) {
                                     let allpairsArray = response.data.idNamePairs;
-                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                    let pairsArray = store.viewList(allpairsArray);
                                     pairsArray = store.sorts(pairsArray);
                                     storeReducer({
                                         type: GlobalStoreActionType.CHANGE_LIST_NAME,
@@ -627,7 +627,7 @@ function GlobalStoreContextProvider(props) {
                                 response = await api.getTop5ListPairs();
                                 if (response.data.success) {
                                     let allpairsArray = response.data.idNamePairs;
-                                    let pairsArray = allpairsArray.filter(filterByownerEmail);
+                                    let pairsArray = store.viewList(allpairsArray);
                                     pairsArray = store.sorts(pairsArray);
                                     storeReducer({
                                         type: GlobalStoreActionType.CHANGE_LIST_NAME,
@@ -724,6 +724,25 @@ function GlobalStoreContextProvider(props) {
         }
         return false;
     }
+
+    //filter list based on view selection
+    store.viewList = function (allpairsArray){
+        if(store.viewhomelist){
+            let pairsArray = allpairsArray.filter(filterByownerEmail);
+            let finalArray = pairsArray.filter(filterBySearchKey);
+            return finalArray;
+        }
+        else if (store.viewalllist){
+            return allpairsArray;
+        }
+        else if (store.viewuserList){
+            return allpairsArray.filter(filterBySearchKeyUser);
+        }
+        else if (store.viewcommunitylist){
+            //store.viewcommunityList();
+        }
+    }
+
     //view home user list
     store.viewhomeList = async function () {
         const response = await api.getTop5ListPairs();
@@ -746,7 +765,7 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
             storeReducer({
-                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                type: GlobalStoreActionType.VIEW_ALL_LIST,
                 payload: allpairsArray
             });
         }
@@ -770,7 +789,7 @@ function GlobalStoreContextProvider(props) {
             let allpairsArray = response.data.idNamePairs;
             let finalArray = allpairsArray.filter(filterBySearchKeyUser);
             storeReducer({
-                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                type: GlobalStoreActionType.VIEW_USER_LIST,
                 payload: finalArray
             });
         }
@@ -792,7 +811,7 @@ function GlobalStoreContextProvider(props) {
             let pairsArray = allpairsArray.filter(filterPublish);
             let finalArray = pairsArray.filter(filterBySearchKey);
             storeReducer({
-                type: GlobalStoreActionType.VIEW_HOME_LIST,
+                type: GlobalStoreActionType.VIEW_COMMUNITY_LIST,
                 payload: finalArray
             });
         }

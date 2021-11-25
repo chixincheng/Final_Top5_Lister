@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react'
+import React, { useContext, useState, useEffect} from 'react'
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
@@ -13,6 +13,8 @@ export default function CreateListModal(props){
     const { store } = useContext(GlobalStoreContext);
     const [ change, setChange] = useState(false);
     const {open,createNewList,close} = props;
+    const [messageopen, setMessageOpen] = useState(false);
+    const [message, setMessage] = useState("");
 
     let payload = {
         name : "Untitled" + store.newListCounter,
@@ -26,6 +28,10 @@ export default function CreateListModal(props){
         viewing: false,
         publishdate: null
     };
+
+    useEffect(() => {
+        setChange(false);
+    },[open]);
 
     function handleOnChange (event){
         let sourceId = event.target.id;
@@ -49,12 +55,30 @@ export default function CreateListModal(props){
         payload.name = event.target.value;
     }
 
+    function handleMessageClose(){
+        setMessageOpen(false);
+    }
+
     function handlePublish(){
-        payload.publish = true;
-        payload.publishdate = new Date();
-        console.log(payload.publishdate.toDateString());
-        createNewList(payload);
-        setChange(false);
+        let publish = true;
+        for(let i =0; i<store.idNamePairs.length; i++){
+            if(store.idNamePairs[i].publish){
+                if(store.idNamePairs[i].name === payload.name){
+                    publish = false;
+                }
+            }
+        }
+        if(publish){
+            payload.publish = true;
+            payload.publishdate = new Date();
+            console.log(payload.publishdate.toDateString());
+            createNewList(payload);
+            setChange(false);
+        }
+        else{
+            setMessage("User can not publish two list with the same name");
+            setMessageOpen(true);
+        }
     }
     return(
         <Dialog
@@ -71,9 +95,6 @@ export default function CreateListModal(props){
                         style = {{ background: "white"}}
                         onChange = {handleNameChange}
                         defaultValue = {payload.name}
-                        // onKeyPress = {(event)=>{
-                        //     KeyPress(event)
-                        // }}
                     />
             </DialogTitle>
             <DialogContent id = "content-list-modal">
@@ -133,6 +154,20 @@ export default function CreateListModal(props){
                         >Publish</Button>
                     }
             </DialogActions>
+            <Dialog
+                id = "message-modal"
+                maxWidth='sm'
+                open= {messageopen}
+                onClose={handleMessageClose}
+                >
+                <DialogTitle>
+                    {message}
+                    <DialogActions>
+                        <Button onClick={handleMessageClose}>Okay</Button>
+                    </DialogActions>
+                </DialogTitle>
+            </Dialog>
         </Dialog>
+        
     )
 }

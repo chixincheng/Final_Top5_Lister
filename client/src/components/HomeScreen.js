@@ -16,10 +16,7 @@ import Box from '@mui/material/Box';
 import CreateListModal from './CreateListModal';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
-import Dialog from '@mui/material/Dialog';
-import Button from '@mui/material/Button';
+
 /*
     This React component lists all the top5 lists in the UI.
     
@@ -29,8 +26,7 @@ const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
     const {auth} = useContext(AuthContext)
     const [open, setOpen] = useState(false);
-    const [messageopen, setMessageOpen] = useState(false);
-    const [message, setMessage] = useState("");
+
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
@@ -71,25 +67,9 @@ const HomeScreen = () => {
         setOpen(true);
     }
 
-    function handleMessageClose(){
-        setMessageOpen(false);
-    }
-
     function createListCallBack(payload){
-        let create = true;
-        for(let i =0; i<store.idNamePairs.length; i++){
-            if(store.idNamePairs[i].name === payload.name){
-                create = false;
-            }
-        }
-        if(create){
-            store.createNewList(payload);
-            setOpen(false);
-        }
-        else{
-            setMessage("User can not have two list with same name");
-            setMessageOpen(true);
-        }
+        store.createNewList(payload);
+        setOpen(false);
     }
 
     function handleSortByNewestDate(){
@@ -237,14 +217,25 @@ const HomeScreen = () => {
             </div>
             {auth.loginstatus () ?
                 <div id="home-footing">
-                    <IconButton 
-                        color="inherit" 
-                        aria-label="add"
-                        id="add-list-button"
-                        onClick={handleCreateNewList}
-                    >
-                        <AddIcon />
-                    </IconButton>
+                    {store.viewhomelist?
+                        <IconButton 
+                            color="inherit" 
+                            aria-label="add"
+                            id="add-list-button"
+                            onClick={handleCreateNewList}
+                        >
+                            <AddIcon />
+                        </IconButton>
+                        :
+                        <IconButton 
+                            color="inherit" 
+                            aria-label="add"
+                            id="add-list-button"
+                            disabled
+                        >
+                            <AddIcon />
+                        </IconButton>
+                    }
                     <Typography variant="h4">Your Lists</Typography>
                 </div>
                 :
@@ -255,19 +246,6 @@ const HomeScreen = () => {
             close = {handleClose} 
             createNewList =  {createListCallBack}
             />
-            <Dialog
-                id = "message-modal"
-                maxWidth='sm'
-                open= {messageopen}
-                onClose={handleMessageClose}
-                >
-                <DialogTitle>
-                    {message}
-                    <DialogActions>
-                        <Button onClick={handleMessageClose}>Okay</Button>
-                    </DialogActions>
-                </DialogTitle>
-            </Dialog>
             {menulist}
         </div>)
 }
