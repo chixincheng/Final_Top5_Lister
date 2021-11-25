@@ -30,6 +30,22 @@ const HomeScreen = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
+    let payload = {
+        name : "Untitled" + store.newListCounter,
+        items: ["", "", "", "", ""],
+        comments: [],
+        like: 0,
+        dislike: 0,
+        view: 0,
+        publish: false,
+        createdate: new Date(),
+        viewing: false,
+        publishdate: null,
+        commentItems: [],
+        isCommunityList: false,
+        updateDate: new Date()
+    };
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -246,6 +262,7 @@ const HomeScreen = () => {
             open = {open} 
             close = {handleClose} 
             createNewList =  {createListCallBack}
+            payload = {payload}
             />
             {menulist}
         </div>)

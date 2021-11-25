@@ -35,12 +35,12 @@ function ListCard(props) {
     let editItems =
             <List id="edit-items">
                 {store.viewcommunitylist ?
-                    idNamePair.items.map((item, index) => (
+                    idNamePair.commentItems.sort((a,b)=>b[1] - a[1]).slice(0,5).map((item, index) => (
                         <Typography 
                             key={'top5-item-' + (index+1)+item}
                             variant = "h3"
                         >
-                            {item+"111"}
+                            {item[0]} {item[1]+"Votes"}
                         </Typography>
                     ))
                     :
@@ -214,11 +214,15 @@ function ListCard(props) {
                     {idNamePair.dislike}
                 </Box>
                 <Box sx={{ p: 1 }}>
-                    <IconButton onClick={(event) => {
-                        handleDeleteList(event, idNamePair._id)
-                    }} aria-label='delete'>
-                        <DeleteIcon style={{fontSize:'48pt'}} />
-                    </IconButton>
+                    {store.viewhomelist?
+                        <IconButton onClick={(event) => {
+                            handleDeleteList(event, idNamePair._id)
+                        }} aria-label='delete'>
+                            <DeleteIcon style={{fontSize:'48pt'}} />
+                        </IconButton>
+                        :
+                        <IconButton></IconButton>
+                    }
                 </Box>
             </AccordionSummary>
             <AccordionDetails id = "accordion-detail">

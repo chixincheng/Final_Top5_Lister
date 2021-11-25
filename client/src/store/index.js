@@ -536,6 +536,7 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function (payload) {
+        console.log(payload.items)
         payload.ownerEmail = auth.user.email;
         payload.Author = auth.user.lastName + " " + auth.user.firstName;
         const response = await api.createTop5List(payload);
@@ -579,17 +580,26 @@ function GlobalStoreContextProvider(props) {
                 let top5List = response.data.top5List;
                 top5List.updateDate = new Date();
                 let score = 5;
-                for(let i = 0; i < allpairsArray.commentItems.length; i++){
-                    let communityitems = [allpairsArray.commentItems[i][0],allpairsArray.commentItems[i][1]];
-                    payload.commentItems.unshift(communityitems)
-                    score = score--;
-                }
-                
+                for(let i = 0; i < payload.items.length; i++){
+                    let itemname = payload.items[i];
+                    let added = false;
+                    for(let j = 0; j < top5List.commentItems.length; j++){
+                        if(top5List.commentItems[j][0] === itemname){
+                            top5List.commentItems[j][1] = top5List.commentItems[j][1] + score;
+                            added = true;
+                        }
+                    }
+                    if(!added){
+                        let communityitems = [itemname,score];
+                        top5List.commentItems.unshift(communityitems)
+                    }
+                    score = score-1;
+                } 
                 async function updateList(top5List) {
                     response = await api.updateTop5ListById(top5List._id, top5List);
                     if (response.data.success) {
                         async function getListPairs(top5List) {
-                            response = await api.getTop5ListPairs();
+                            response = await api.getCommunityList();
                             if (response.data.success) {
                                 let allpairsArray = response.data.idNamePairs;
                                 let pairsArray = store.viewList(allpairsArray);
@@ -620,21 +630,22 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;//all community list
             let exist = false;
+            let id = 0;
             for(let i = 0; i < allpairsArray.length; i++){
                 if(allpairsArray[i].name === payload.name){
                     exist = true;
+                    id = allpairsArray[i]._id;//id of the existing community list
                 }
             }
             if(exist){//update current community list
-                let id = payload._id;
                 store.editCommunityList(payload,id);
             }
             else{//create a new community list
                 payload.isCommunityList = true;
                 payload.updateDate = new Date();
                 let score = 5;
-                for(let i = 0; i < allpairsArray.items.length; i++){
-                    let communityitems = [allpairsArray.items[i],score];
+                for(let i = 0; i < payload.items.length; i++){
+                    let communityitems = [payload.items[i],score];
                     payload.commentItems.unshift(communityitems)
                     score = score--;
                 }
@@ -713,24 +724,33 @@ function GlobalStoreContextProvider(props) {
     store.viewList = function (allpairsArray){
         if(store.viewhomelist){
             let pairsArray = allpairsArray.filter(filterByownerEmail);
-            let finalArray = pairsArray.filter(filterBySearchKey);
+            let filterArray = pairsArray.filter(filterByCommunityList);
+            let finalArray = filterArray.filter(filterBySearchKey);
             return finalArray;
         }
         else if (store.viewalllist){
             let pairsArray = allpairsArray.filter(filterByPublish);
-            let finalArray = pairsArray.filter(filterBySearchKey);
+            let filterArray = pairsArray.filter(filterByCommunityList);
+            let finalArray = filterArray.filter(filterBySearchKey);
             return finalArray;
         }
         else if (store.viewuserlist){
             let pairsArray = allpairsArray.filter(filterByPublish);
-            let finalArray = pairsArray.filter(filterBySearchKeyUser);
+            let filterArray = pairsArray.filter(filterByCommunityList);
+            let finalArray = filterArray.filter(filterBySearchKeyUser);
             return finalArray;
         }
         else if (store.viewcommunitylist){
-            let pairsArray = allpairsArray.filter(filterPublish);
-            let finalArray = pairsArray.filter(filterBySearchKey);
+            let finalArray = allpairsArray.filter(filterBySearchKey);
             return finalArray;
         }
+    }
+
+    function filterByCommunityList(list){
+        if(list.isCommunityList){
+            return false;
+        }
+        return true;
     }
 
     //view home user list
@@ -739,7 +759,8 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
             let pairsArray = allpairsArray.filter(filterByownerEmail);
-            let finalArray = pairsArray.filter(filterBySearchKey);
+            let filterArray = pairsArray.filter(filterByCommunityList);
+            let finalArray = filterArray.filter(filterBySearchKey);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_HOME_LIST,
                 payload: finalArray
@@ -755,7 +776,8 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
             let pairsArray = allpairsArray.filter(filterByPublish);
-            let finalArray = pairsArray.filter(filterBySearchKey);
+            let filterArray = pairsArray.filter(filterByCommunityList);
+            let finalArray = filterArray.filter(filterBySearchKey);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_ALL_LIST,
                 payload: finalArray
@@ -780,7 +802,8 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
             let pairsArray = allpairsArray.filter(filterByPublish);
-            let finalArray = pairsArray.filter(filterBySearchKeyUser);
+            let filterArray = pairsArray.filter(filterByCommunityList);
+            let finalArray = filterArray.filter(filterBySearchKeyUser);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_USER_LIST,
                 payload: finalArray
@@ -790,21 +813,13 @@ function GlobalStoreContextProvider(props) {
             console.log("API FAILED TO GET THE LIST PAIRS");
         }
     }
-    function filterPublish(list){
-        if(list.publish){
-            return true;
-        }
-        return false;
-    }
     // view community list
     store.viewcommunityList = async function () {
         //load community list
-        const response = await api.getTop5ListPairs();
+        const response = await api.getCommunityList();
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
-            let pairsArray = allpairsArray.filter(filterPublish);
-            //let commlist = store.calculatecommunitylist(pairsArray);
-            let finalArray = pairsArray.filter(filterBySearchKey);
+            let finalArray = allpairsArray.filter(filterBySearchKey);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_COMMUNITY_LIST,
                 payload: finalArray

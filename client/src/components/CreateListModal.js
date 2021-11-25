@@ -12,22 +12,10 @@ import { GlobalStoreContext } from '../store'
 export default function CreateListModal(props){
     const { store } = useContext(GlobalStoreContext);
     const [ change, setChange] = useState(false);
-    const {open,createNewList,close} = props;
+    const {open,createNewList,close,payload} = props;
     const [messageopen, setMessageOpen] = useState(false);
     const [message, setMessage] = useState("");
 
-    let payload = {
-        name : "Untitled" + store.newListCounter,
-        items: ["", "", "", "", ""],
-        comments: [],
-        like: 0,
-        dislike: 0,
-        view: 0,
-        publish: false,
-        createdate: new Date(),
-        viewing: false,
-        publishdate: null
-    };
 
     useEffect(() => {
         setChange(false);
@@ -69,6 +57,7 @@ export default function CreateListModal(props){
             }
         }
         if(publish){
+            console.log(payload.items);
             payload.publish = true;
             payload.publishdate = new Date();
             console.log(payload.publishdate.toDateString());
