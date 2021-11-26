@@ -757,16 +757,25 @@ function GlobalStoreContextProvider(props) {
             return finalArray;
         }
         else if (store.viewcommunitylist){
-            let finalArray = allpairsArray.filter(filterBySearchKey);
-            return finalArray;
+            let pairsArray = allpairsArray.filter(filterBySearchKey);
+            let filterArray = pairsArray.filter(filterAllCommunityList);
+            return filterArray;
         }
     }
-
+    //filter all list that is not a community list
     function filterByCommunityList(list){
         if(list.isCommunityList){
             return false;
         }
         return true;
+    }
+
+    //filter all list that is a community list
+    function filterAllCommunityList(list){
+        if(list.isCommunityList){
+            return true;
+        }
+        return false;
     }
 
     //view home user list

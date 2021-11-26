@@ -40,7 +40,8 @@ function ListCard(props) {
                             key={'top5-item-' + (index+1)+item}
                             variant = "h3"
                         >
-                            {item[0]} {item[1]+"Votes"}
+                            {item[0]}
+                            <div style = {{display: "flex", fontSize: "16pt"}}>{item[1]+" Votes"}</div>
                         </Typography>
                     ))
                     :
@@ -227,13 +228,23 @@ function ListCard(props) {
             </AccordionSummary>
             <AccordionDetails id = "accordion-detail">
                 <Box id="itembox">
-                    <div id="edit-numbering">
-                        <div className="item-number"><Typography variant="h3">1.</Typography></div>
-                        <div className="item-number"><Typography variant="h3">2.</Typography></div>
-                        <div className="item-number"><Typography variant="h3">3.</Typography></div>
-                        <div className="item-number"><Typography variant="h3">4.</Typography></div>
-                        <div className="item-number"><Typography variant="h3">5.</Typography></div>
-                    </div>
+                    {store.viewcommunitylist?
+                        <div id="edit-numbering" style = {{height: "323px"}}>
+                            <div className="item-number"><Typography variant="h3">1.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">2.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">3.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">4.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">5.</Typography></div>
+                        </div>
+                        :
+                        <div id="edit-numbering">
+                            <div className="item-number"><Typography variant="h3">1.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">2.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">3.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">4.</Typography></div>
+                            <div className="item-number"><Typography variant="h3">5.</Typography></div>
+                        </div>
+                    }
                     {editItems}
                 </Box>
                 <Box id = "commentbox">
