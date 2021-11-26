@@ -149,6 +149,13 @@ function ListCard(props) {
     }
 
     function datestring(){
+        if(idNamePair.isCommunityList){
+            let d = new Date(idNamePair.updateDate);
+            let month = d.toLocaleString('default', {month: 'short'});
+            let date = d.getDate();
+            let year = d.getFullYear();
+            return month+" "+date+","+year;
+        }
         if(idNamePair.publish){
             let d = new Date(idNamePair.publishdate);
             let month = d.toLocaleString('default', {month: 'short'});

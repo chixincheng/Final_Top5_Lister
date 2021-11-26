@@ -103,6 +103,7 @@ function AuthContextProvider(props) {
             payload: {}
         })
         history.push("/");
+        window.location.reload();
     }
     auth.loginUser = async function(userData, store){
         const response = await api.loginUser(userData);
