@@ -598,7 +598,7 @@ function GlobalStoreContextProvider(props) {
                     response = await api.updateTop5ListById(top5List._id, top5List);
                     if (response.data.success) {
                         async function getListPairs(top5List) {
-                            response = await api.getCommunityList();
+                            response = await api.getTop5ListPairs();
                             if (response.data.success) {
                                 let allpairsArray = response.data.idNamePairs;
                                 let pairsArray = store.viewList(allpairsArray);
@@ -739,8 +739,11 @@ function GlobalStoreContextProvider(props) {
     store.viewList = function (allpairsArray){
         if(store.viewhomelist){
             let pairsArray = allpairsArray.filter(filterByownerEmail);
+            console.log("pair "+pairsArray);
             let filterArray = pairsArray.filter(filterByCommunityList);
+            console.log("filter "+filterArray);
             let finalArray = filterArray.filter(filterBySearchKey);
+            console.log("final "+finalArray);
             return finalArray;
         }
         else if (store.viewalllist){
@@ -995,6 +998,7 @@ function GlobalStoreContextProvider(props) {
                                                     }
                                                 });
                                             }
+
                                         }
                                         getListPairs(top5List);
                                     }
