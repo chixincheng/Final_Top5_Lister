@@ -182,6 +182,7 @@ getCommunityList = async (req, res) => {
                     let pair = {
                         _id: list._id,
                         name: list.name,
+                        items: list.items,
                         comments: list.comments,
                         like: list.like,
                         dislike: list.dislike,

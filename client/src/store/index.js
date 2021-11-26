@@ -628,6 +628,7 @@ function GlobalStoreContextProvider(props) {
         //check if such community already exist
         const response = await api.getCommunityList();
         if (response.data.success) {
+            console.log("enters")
             let allpairsArray = response.data.idNamePairs;//all community list
             let exist = false;
             let id = 0;
@@ -641,15 +642,30 @@ function GlobalStoreContextProvider(props) {
                 store.editCommunityList(payload,id);
             }
             else{//create a new community list
-                payload.isCommunityList = true;
-                payload.updateDate = new Date();
+                let payloadtemp = {
+                    name : payload.name,
+                    items: payload.items,
+                    ownerEmail: "community",
+                    Author: "community",
+                    comments: [],
+                    like: 0,
+                    dislike: 0,
+                    view: 0,
+                    publish: true,
+                    createdate: new Date(),
+                    viewing: false,
+                    publishdate: null,
+                    commentItems: [],
+                    isCommunityList: true,
+                    updateDate: new Date()
+                };
                 let score = 5;
                 for(let i = 0; i < payload.items.length; i++){
-                    let communityitems = [payload.items[i],score];
-                    payload.commentItems.unshift(communityitems)
-                    score = score--;
+                    let communityitems = [payloadtemp.items[i],score];
+                    payloadtemp.commentItems.unshift(communityitems)
+                    score = score-1;
                 }
-                store.createCommunityList(payload);
+                store.createCommunityList(payloadtemp);
             }
         }
         else {

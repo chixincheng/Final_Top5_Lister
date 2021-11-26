@@ -36,7 +36,18 @@ export default function EditListModal(props){
     }
 
     useEffect(() => {
-        setChange(false);
+        let ct = 0 ;
+        for (let i = 0; i < payload.items.length; i++) {
+            if(payload.items[i] === ""){
+                ct = ct+1;
+            }
+        }
+        if(ct === 0){
+            setChange(true);
+        }
+        else{
+            setChange(false);
+        }
     },[open]);
 
     function handleNameChange(event){
@@ -76,6 +87,7 @@ export default function EditListModal(props){
             open= {open}
             onClose={close}
             >
+            
             <DialogTitle style = {{backgroundColor: "#d4d4f5"}}>
                 <TextField
                         id="name"
