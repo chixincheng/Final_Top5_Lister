@@ -41,7 +41,9 @@ function ListCard(props) {
                             variant = "h3"
                         >
                             {item[0]}
-                            <div style = {{display: "flex", fontSize: "16pt"}}>{item[1]+" Votes"}</div>
+                            <div style = {{display: "flex", fontSize: "16pt"}}>
+                                {"("+item[1]+" Votes)"}
+                            </div>
                         </Typography>
                     ))
                     :
@@ -56,21 +58,39 @@ function ListCard(props) {
                 }
             </List>;
     let commentList =
-            <List id = "commentlistview"sx={{left: '1%', right: '1%', height: "200px"}}>
-            {
-                idNamePair.comments.map((text, index) => (
-                    <div id = "comments" key = {"comment-list "+index} 
-                        style ={{color: "black", height: "25%", width: "100%", backgroundColor: "#d4af37"}}
-                    >
-                        <s  id = 'Author' style ={{fontSize: "14pt", marginLeft: "2%"}}
-                        >{text[0]}</s>
-                        <br/>
-                        <s style = {{fontSize: "24pt", textDecoration: "none", marginLeft: "2%"}}
-                        >{text[1]}</s>
-                    </div>
-                ))
-            }
+            <List id = "commentlistview"sx={{left: '1%', right: '1%', height: "240px"}}>
+                {
+                    idNamePair.comments.map((text, index) => (
+                        <div id = "comments" key = {"comment-list "+index} 
+                            style ={{color: "black", height: "25%", width: "100%", backgroundColor: "#d4af37"}}
+                        >
+                            <s  id = 'Author' style ={{fontSize: "14pt", marginLeft: "2%"}}
+                            >{text[0]}</s>
+                            <br/>
+                            <s style = {{fontSize: "24pt", textDecoration: "none", marginLeft: "2%"}}
+                            >{text[1]}</s>
+                        </div>
+                    ))
+                }
             </List>;
+    if(store.viewcommunitylist){
+        commentList =
+            <List id = "commentlistview"sx={{left: '1%', right: '1%', height: "380px"}}>
+                {
+                    idNamePair.comments.map((text, index) => (
+                        <div id = "comments" key = {"comment-list "+index} 
+                            style ={{color: "black", height: "25%", width: "100%", backgroundColor: "#d4af37"}}
+                        >
+                            <s  id = 'Author' style ={{fontSize: "14pt", marginLeft: "2%"}}
+                            >{text[0]}</s>
+                            <br/>
+                            <s style = {{fontSize: "24pt", textDecoration: "none", marginLeft: "2%"}}
+                            >{text[1]}</s>
+                        </div>
+                    ))
+                }
+            </List>;
+    }
     function handleDeleteClose (event){
         event.stopPropagation();
         setDeleteOpen(false);

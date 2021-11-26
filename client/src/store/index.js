@@ -536,7 +536,6 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function (payload) {
-        console.log(payload.items)
         payload.ownerEmail = auth.user.email;
         payload.Author = auth.user.lastName + " " + auth.user.firstName;
         const response = await api.createTop5List(payload);
@@ -585,7 +584,7 @@ function GlobalStoreContextProvider(props) {
                     let added = false;
                     for(let j = 0; j < top5List.commentItems.length; j++){
                         if(top5List.commentItems[j][0] === itemname){
-                            top5List.commentItems[j][1] = top5List.commentItems[j][1] + score;
+                            top5List.commentItems[j][1] = Number(top5List.commentItems[j][1]) + score;
                             added = true;
                         }
                     }
@@ -948,10 +947,70 @@ function GlobalStoreContextProvider(props) {
             });
         }
     }
-
     store.deleteList = async function (listToDelete) {
         let response = await api.deleteTop5ListById(listToDelete._id);
         if (response.data.success) {
+            if(response.data.data.publish){//update community list
+                let listname = response.data.data.name;
+                let listitem = response.data.data.items;
+                async function updateCommunity(listname,listitem){
+                    response = await api.getCommunityList();
+                    if (response.data.success) {
+                        let allpairsArray = response.data.idNamePairs;
+                        let id = 0;
+                        for(let i = 0;i<allpairsArray.length;i++){
+                            if(allpairsArray[i].name === listname){
+                                id = allpairsArray[i]._id;
+                            }
+                        }
+                        async function asyncupdateCommunityList(id,listitem) {
+                            let response = await api.getTop5ListById(id);
+                            if (response.data.success) {
+                                let top5List = response.data.top5List;
+                                top5List.updateDate = new Date();
+                                let score = 5;
+                                for(let i = 0; i < listitem.length; i++){
+                                    let itemname = listitem[i];
+                                    for(let j = 0; j < top5List.commentItems.length; j++){
+                                        if(top5List.commentItems[j][0] === itemname){
+                                            top5List.commentItems[j][1] = Number(top5List.commentItems[j][1]) - score;
+                                        }
+                                    }
+                                    score = score-1;
+                                }
+                                async function updateList(top5List) {
+                                    response = await api.updateTop5ListById(top5List._id, top5List);
+                                    if (response.data.success) {
+                                        async function getListPairs(top5List) {
+                                            response = await api.getTop5ListPairs();
+                                            if (response.data.success) {
+                                                let allpairsArray = response.data.idNamePairs;
+                                                let pairsArray = store.viewList(allpairsArray);
+                                                pairsArray = store.sorts(pairsArray);
+                                                storeReducer({
+                                                    type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                                    payload: {
+                                                        idNamePairs: pairsArray,
+                                                        top5List: top5List
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        getListPairs(top5List);
+                                    }
+                                }
+                                updateList(top5List);
+                                
+                            }
+                        }
+                        asyncupdateCommunityList(id,listitem);
+                    }
+                    else {
+                        console.log("API FAILED TO GET THE LIST PAIRS");
+                    }
+                }
+                updateCommunity(listname,listitem)
+            }
             store.loadIdNamePairs();
             history.push("/");
         }

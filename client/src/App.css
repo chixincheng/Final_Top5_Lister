@@ -273,7 +273,7 @@ body {
 #edit-items {
   position: relative;
   left: auto;
-  width: 10%;
+  width: 90%;
   height: 50%;
   color: #d0ac38;
   font-size: 16pt;
@@ -328,7 +328,6 @@ body {
 }
 #commentlistview{
   padding: 0;
-  height: 230px;
   min-width: 400px;
   left: 0%;
   right: 0%;

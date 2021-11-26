@@ -57,10 +57,8 @@ export default function CreateListModal(props){
             }
         }
         if(publish){
-            console.log(payload.items);
             payload.publish = true;
             payload.publishdate = new Date();
-            console.log(payload.publishdate.toDateString());
             createNewList(payload);
             setChange(false);
             store.createOrEditCommunityList(payload);
