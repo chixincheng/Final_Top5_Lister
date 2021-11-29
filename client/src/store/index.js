@@ -250,8 +250,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewallList,
-                    viewcommunitylist: store.viewcommunityList,
+                    viewalllist: store.viewalllist,
+                    viewcommunitylist: store.viewcommunitylist,
                     sortbynewest: false,
                     sortbyoldest: false,
                     sortbylike: true,
@@ -266,8 +266,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewallList,
-                    viewcommunitylist: store.viewcommunityList,
+                    viewalllist: store.viewalllist,
+                    viewcommunitylist: store.viewcommunitylist,
                     sortbynewest: false,
                     sortbyoldest: false,
                     sortbylike: false,
@@ -282,8 +282,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewallList,
-                    viewcommunitylist: store.viewcommunityList,
+                    viewalllist: store.viewalllist,
+                    viewcommunitylist: store.viewcommunitylist,
                     sortbynewest: true,
                     sortbyoldest: false,
                     sortbylike: false,
@@ -298,8 +298,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewallList,
-                    viewcommunitylist: store.viewcommunityList,
+                    viewalllist: store.viewalllist,
+                    viewcommunitylist: store.viewcommunitylist,
                     sortbynewest: false,
                     sortbyoldest: true,
                     sortbylike: false,
@@ -314,8 +314,8 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null,
                     viewhomelist: store.viewhomelist,
                     viewuserlist: store.viewuserlist,
-                    viewalllist: store.viewallList,
-                    viewcommunitylist: store.viewcommunityList,
+                    viewalllist: store.viewalllist,
+                    viewcommunitylist: store.viewcommunitylist,
                     sortbynewest: false,
                     sortbyoldest: false,
                     sortbylike: false,
@@ -627,7 +627,6 @@ function GlobalStoreContextProvider(props) {
         //check if such community already exist
         const response = await api.getCommunityList();
         if (response.data.success) {
-            console.log("enters")
             let allpairsArray = response.data.idNamePairs;//all community list
             let exist = false;
             let id = 0;
@@ -705,7 +704,7 @@ function GlobalStoreContextProvider(props) {
         else if (store.viewalllist){
             store.viewallList();
         }
-        else if (store.viewuserList){
+        else if (store.viewuserlist){
             store.viewuserList();
         }
         else if (store.viewcommunitylist){
@@ -739,11 +738,8 @@ function GlobalStoreContextProvider(props) {
     store.viewList = function (allpairsArray){
         if(store.viewhomelist){
             let pairsArray = allpairsArray.filter(filterByownerEmail);
-            console.log("pair "+pairsArray);
             let filterArray = pairsArray.filter(filterByCommunityList);
-            console.log("filter "+filterArray);
             let finalArray = filterArray.filter(filterBySearchKey);
-            console.log("final "+finalArray);
             return finalArray;
         }
         else if (store.viewalllist){
@@ -788,6 +784,7 @@ function GlobalStoreContextProvider(props) {
             let pairsArray = allpairsArray.filter(filterByownerEmail);
             let filterArray = pairsArray.filter(filterByCommunityList);
             let finalArray = filterArray.filter(filterBySearchKey);
+            finalArray = store.sorts(finalArray);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_HOME_LIST,
                 payload: finalArray
@@ -805,6 +802,7 @@ function GlobalStoreContextProvider(props) {
             let pairsArray = allpairsArray.filter(filterByPublish);
             let filterArray = pairsArray.filter(filterByCommunityList);
             let finalArray = filterArray.filter(filterBySearchKey);
+            finalArray = store.sorts(finalArray);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_ALL_LIST,
                 payload: finalArray
@@ -831,6 +829,7 @@ function GlobalStoreContextProvider(props) {
             let pairsArray = allpairsArray.filter(filterByPublish);
             let filterArray = pairsArray.filter(filterByCommunityList);
             let finalArray = filterArray.filter(filterBySearchKeyUser);
+            finalArray = store.sorts(finalArray);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_USER_LIST,
                 payload: finalArray
@@ -847,6 +846,7 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let allpairsArray = response.data.idNamePairs;
             let finalArray = allpairsArray.filter(filterBySearchKey);
+            finalArray = store.sorts(finalArray);
             storeReducer({
                 type: GlobalStoreActionType.VIEW_COMMUNITY_LIST,
                 payload: finalArray
