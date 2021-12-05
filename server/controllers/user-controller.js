@@ -12,7 +12,9 @@ getLoggedIn = async (req, res) => {
                 lastName: loggedInUser.lastName,
                 email: loggedInUser.email,
                 userName: loggedInUser.userName,
-                _id: loggedInUser._id
+                _id: loggedInUser._id,
+                likedList: loggedInUser.likedList,
+                dislikedList: loggedInUser.dislikedList
             }
         }).send();
     })
@@ -66,7 +68,9 @@ loginUser = async(req, res) => {
                 lastName: existingUser.lastName,
                 email: existingUser.email,
                 userName: existingUser.userName,
-                _id: existingUser._id
+                _id: existingUser._id,
+                likedList: existingUser.likedList,
+                dislikedList: existingUser.dislikedList
             }
         }).send();
     } catch (err) {
@@ -135,7 +139,9 @@ registerUser = async (req, res) => {
                 lastName: savedUser.lastName,
                 email: savedUser.email,
                 userName: savedUser.userName,
-                _id: savedUser._id
+                _id: savedUser._id,
+                likedList: savedUser.likedList,
+                dislikedList: savedUser.dislikedList
             }
         }).send();
     } catch (err) {

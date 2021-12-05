@@ -197,6 +197,17 @@ body {
   overflow: scroll;
   overflow-x:hidden
 }
+.likedislikebutton{
+  color: rgba(0, 0, 0, 0.54)!important;
+  cursor: pointer;
+}
+.likedislikebuttonpress {
+  color: rgba(0, 0, 0, 0.959)!important;
+  outline: none;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+}
 
 .list-card,
 .selected-list-card,

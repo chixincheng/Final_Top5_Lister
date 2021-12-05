@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect} from 'react'
 import { GlobalStoreContext } from '../store'
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -29,10 +29,10 @@ function ListCard(props) {
     const { idNamePair } = props;
     const [deleteopen, setDeleteOpen] = useState(false);
     const [editopen, setEditOpen] = useState(false);
-
     const backgroundColor = idNamePair.publish?"#d4d4f5":"white";
 
-
+    const [like, setLike] = useState(auth.user.likedList.includes(idNamePair._id));
+    const [dislike, setDislike] = useState(auth.user.dislikedList.includes(idNamePair._id));
 
     let editItems =
             <List id="edit-items">
@@ -142,6 +142,10 @@ function ListCard(props) {
         event.stopPropagation();
         if(auth.loggedIn){
             store.likeList(id,auth.user._id);
+            setLike(!like);
+            if(dislike){
+                setDislike(false);
+            }
         }
     }
 
@@ -149,9 +153,13 @@ function ListCard(props) {
         event.stopPropagation();
         if(auth.loggedIn){
             store.disLikeList(id,auth.user._id);
+            setDislike(!dislike);
+            if(like){
+                setLike(false);
+            }
         }
     }
-    
+
     function handleUpdateView(id){
         store.increaseview(id);
     }
@@ -229,11 +237,19 @@ function ListCard(props) {
                 
                 <Box sx={{ p: 1 }} style={{fontSize:'48pt'}}>
                     <div>
-                        <IconButton onClick={(event) => {
-                            handleLike(event, idNamePair._id)
-                        }} aria-label='delete'>
-                            <ThumbUpIcon style={{fontSize:'48pt'}} />
-                        </IconButton>
+                        {like ?
+                            <IconButton onClick={(event) => {
+                                handleLike(event, idNamePair._id)
+                            }} aria-label='like' className = "likedislikebuttonpress">
+                                <ThumbUpIcon style={{fontSize:'48pt'}} />
+                            </IconButton>
+                            :
+                            <IconButton onClick={(event) => {
+                                handleLike(event, idNamePair._id)
+                            }} aria-label='like' className = "likedislikebutton">
+                                <ThumbUpIcon style={{fontSize:'48pt'}} />
+                            </IconButton>
+                        } 
                         {idNamePair.like}
                         <br/>
                         <span style = {{fontSize: '20pt'}}>    
@@ -242,11 +258,19 @@ function ListCard(props) {
                     </div>
                 </Box>
                 <Box sx={{ p: 1 }} style={{fontSize:'48pt'}}>
-                    <IconButton onClick={(event) => {
-                        handleDislike(event, idNamePair._id)
-                    }} aria-label='delete'>
-                        <ThumbDownAltIcon style={{fontSize:'48pt'}} />
-                    </IconButton>
+                    {dislike ?
+                        <IconButton onClick={(event) => {
+                            handleDislike(event, idNamePair._id)
+                        }} aria-label='dislike' className = "likedislikebuttonpress">
+                            <ThumbDownAltIcon style={{fontSize:'48pt'}} />
+                        </IconButton>
+                        :
+                        <IconButton onClick={(event) => {
+                            handleDislike(event, idNamePair._id)
+                        }} aria-label='dislike' className = "likedislikebutton">
+                            <ThumbDownAltIcon style={{fontSize:'48pt'}} />
+                        </IconButton>
+                    }
                     {idNamePair.dislike}
                 </Box>
                 <Box sx={{ p: 1 }}>
