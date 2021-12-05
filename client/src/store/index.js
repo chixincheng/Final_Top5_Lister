@@ -422,15 +422,18 @@ function GlobalStoreContextProvider(props) {
                             userresponse = await api.updateUserById(userid,user);
                         }
                         updateUser(user);
+                        auth.user.likedList = user.likedList;
                     }
                     else{
                         //put it into liedlist
                         user.likedList.push(id);
+                        auth.user.likedList = user.likedList;
                         if(user.dislikedList.includes(id)){
                             //remove from disliked list
                             let idx = user.dislikedList.indexOf(id);
                             user.dislikedList.splice(idx,1);
                             dislikedbefore = true;
+                            auth.user.dislikedList = user.dislikedList;
                         }
                         async function updateUser(user){
                             userresponse = await api.updateUserById(userid,user);
@@ -496,14 +499,17 @@ function GlobalStoreContextProvider(props) {
                             userresponse = await api.updateUserById(userid,user);
                         }
                         updateUser(user);
+                        auth.user.dislikedList = user.dislikedList;
                     }
                     else{
                         //put it into disliedlist
                         user.dislikedList.push(id);
+                        auth.user.dislikedList = user.dislikedList;
                         if(user.likedList.includes(id)){
                             //remove from liked list
                             let idx = user.likedList.indexOf(id);
                             user.likedList.splice(idx,1);
+                            auth.user.likedList = user.likedList;
                             likedbefore = true;
                         }
                         async function updateUser(user){
