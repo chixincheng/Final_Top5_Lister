@@ -14,6 +14,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import List from '@mui/material/List';
 import EditListModal from './EditListModal.js';
+import AuthContext from '../auth'
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -24,6 +25,7 @@ import EditListModal from './EditListModal.js';
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
+    const {auth} = useContext(AuthContext)
     const { idNamePair } = props;
     const [deleteopen, setDeleteOpen] = useState(false);
     const [editopen, setEditOpen] = useState(false);
@@ -129,19 +131,25 @@ function ListCard(props) {
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let text = event.target.value;
-            store.addComment(idNamePair._id, text);
+            if(auth.loggedIn){
+                store.addComment(idNamePair._id, text);
+            }
             event.target.value = "";
         }
     }
     
     function handleLike(event, id) {
         event.stopPropagation();
-        store.likeList(id);
+        if(auth.loggedIn){
+            store.likeList(id,auth.user._id);
+        }
     }
 
     function handleDislike(event, id) {
         event.stopPropagation();
-        store.disLikeList(id);
+        if(auth.loggedIn){
+            store.disLikeList(id,auth.user._id);
+        }
     }
     
     function handleUpdateView(id){

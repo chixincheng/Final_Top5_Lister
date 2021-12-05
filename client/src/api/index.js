@@ -34,6 +34,8 @@ export const getLoggedIn = () => api.get(`/loggedIn/`);
 export const registerUser = (payload) => api.post(`/register/`, payload)
 export const loginUser = (payload) => api.post(`/login/`, payload)
 export const logoutUser = () => api.get(`/logout/`)
+export const getUserById = (id) => api.get(`/user/${id}`)
+export const updateUserById = (id, payload) => api.put(`/user/${id}`, payload)
 
 const apis = {
     createTop5List,
@@ -48,7 +50,9 @@ const apis = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getUserById,
+    updateUserById
 }
 
 export default apis

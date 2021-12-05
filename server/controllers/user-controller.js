@@ -11,7 +11,8 @@ getLoggedIn = async (req, res) => {
                 firstName: loggedInUser.firstName,
                 lastName: loggedInUser.lastName,
                 email: loggedInUser.email,
-                userName: loggedInUser.userName
+                userName: loggedInUser.userName,
+                _id: loggedInUser._id
             }
         }).send();
     })
@@ -64,7 +65,8 @@ loginUser = async(req, res) => {
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,
                 email: existingUser.email,
-                userName: existingUser.userName
+                userName: existingUser.userName,
+                _id: existingUser._id
             }
         }).send();
     } catch (err) {
@@ -132,7 +134,8 @@ registerUser = async (req, res) => {
                 firstName: savedUser.firstName,
                 lastName: savedUser.lastName,
                 email: savedUser.email,
-                userName: savedUser.userName
+                userName: savedUser.userName,
+                _id: savedUser._id
             }
         }).send();
     } catch (err) {
@@ -141,8 +144,61 @@ registerUser = async (req, res) => {
     }
 }
 
+getUserById = async (req, res) => {
+    await User.findById({ _id: req.params.id }, (err, user) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err });
+        }
+        return res.status(200).json({ success: true, user: user })
+    }).catch(err => console.log(err))
+}
+
+updateUser = async (req, res) => {
+    const body = req.body
+    console.log("updateUser: " + JSON.stringify(body));
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+
+    User.findOne({ _id: req.params.id }, (err, user) => {
+        console.log("User found: " + JSON.stringify(user));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'User not found!',
+            })
+        }
+
+        user.likedList = body.likedList
+        user.dislikedList = body.dislikedList
+
+        user
+            .save()
+            .then(() => {
+                console.log("SUCCESS!!!");
+                return res.status(200).json({
+                    success: true,
+                    id: user._id,
+                    message: 'User updated!',
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'User not updated!',
+                })
+            })
+    })
+}
+
 module.exports = {
     getLoggedIn,
     registerUser,
-    loginUser
+    loginUser,
+    getUserById,
+    updateUser
 }

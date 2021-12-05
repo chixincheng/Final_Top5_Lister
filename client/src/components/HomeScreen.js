@@ -24,7 +24,7 @@ import Menu from '@mui/material/Menu';
 */
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
-    const {auth} = useContext(AuthContext)
+    const {auth} = useContext(AuthContext);
     const [open, setOpen] = useState(false);
 
     const [anchorEl, setAnchorEl] = useState(null);
