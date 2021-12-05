@@ -27,7 +27,7 @@ export default function SignInSide() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     auth.loginUser({
-        email: formData.get('email'),
+        email: formData.get('emailorusername'),
         password: formData.get('password')
     }, store);
   };
@@ -71,10 +71,10 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="emailorusername"
+                label="Email Address Or User Name"
+                name="emailorusername"
+                autoComplete="emailorusername"
                 autoFocus
               />
               <TextField

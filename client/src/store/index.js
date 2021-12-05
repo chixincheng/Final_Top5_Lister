@@ -338,7 +338,7 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let top5List = response.data.top5List;
             if(auth.loggedIn){
-                let author = auth.user.lastName + " " + auth.user.firstName;
+                let author = auth.user.userName;
                 let commenttoadd = [author,comment];
                 top5List.comments.unshift(commenttoadd);
                 async function updateList(top5List) {
@@ -536,8 +536,9 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function (payload) {
+        console.log(auth.user);
         payload.ownerEmail = auth.user.email;
-        payload.Author = auth.user.lastName + " " + auth.user.firstName;
+        payload.Author = auth.user.userName;
         const response = await api.createTop5List(payload);
         if (response.data.success) {
             let newList = response.data.top5List;
@@ -728,7 +729,7 @@ function GlobalStoreContextProvider(props) {
         if(searchKeyWord === ""){
             return true;
         }
-        else if(list.name.includes(searchKeyWord)){
+        else if(list.name.includes(searchKeyWord.toLowerCase()) || list.name.includes(searchKeyWord.toUpperCase())){
             return true;
         }
         return false;
@@ -816,7 +817,7 @@ function GlobalStoreContextProvider(props) {
         if(searchKeyWord === ""){
             return false;
         }
-        else if(list.Author.includes(searchKeyWord)){
+        else if(list.Author.includes(searchKeyWord.toLowerCase()) || list.Author.includes(searchKeyWord.toUpperCase())){
             return true;
         }
         return false;
@@ -860,16 +861,68 @@ function GlobalStoreContextProvider(props) {
     store.sorts = function(pairsArray){
         if(store.sortbynewest){
             return pairsArray.sort(function(a,b){
-                let date1 = new Date(a.createdate).getMilliseconds();
-                let date2 = new Date(b.createdate).getMilliseconds();
-                return date2 - date1;
+                if(a.isCommunityList && b.isCommunityList){
+                    let date1 = new Date(a.updateDate).getMilliseconds();
+                    let date2 = new Date(b.updateDate).getMilliseconds();
+                    if(date1 < date2){
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
+                else{
+                    if(a.publishdate === null && b.publishdate === null){
+                        return 0;
+                    }
+                    else if(a.publishdate === null){
+                        return 1;
+                    }
+                    else if(b.publishdate === null){
+                        return -1;
+                    }
+                    let date1 = new Date(a.publishdate).getMilliseconds();
+                    let date2 = new Date(b.publishdate).getMilliseconds();
+                    if(date1 < date2){
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
             });
         }
         else if(store.sortbyoldest){
             return pairsArray.sort(function(a,b){
-                let date1 = new Date(a.createdate).getMilliseconds();
-                let date2 = new Date(b.createdate).getMilliseconds();
-                return date1 - date2;
+                if(a.isCommunityList && b.isCommunityList){
+                    let date1 = new Date(a.updateDate).getMilliseconds();
+                    let date2 = new Date(b.updateDate).getMilliseconds();
+                    if(date1 < date2){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+                }
+                else{
+                    if(a.publishdate === null && b.publishdate === null){
+                        return 0;
+                    }
+                    else if(a.publishdate === null){
+                        return 1;
+                    }
+                    else if(b.publishdate === null){
+                        return -1;
+                    }
+                    let date1 = new Date(a.publishdate).getMilliseconds();
+                    let date2 = new Date(b.publishdate).getMilliseconds();
+                    if(date1 < date2){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+                }
             });
         }
         else if(store.sortbylike){
@@ -887,9 +940,35 @@ function GlobalStoreContextProvider(props) {
     store.sortByNewest= function(){
         let pairs = store.idNamePairs.sort(function(a,b)
             {
-                let date1 = new Date(a.createdate).getMilliseconds();
-                let date2 = new Date(b.createdate).getMilliseconds();
-                return date2 - date1;
+                if(a.isCommunityList && b.isCommunityList){
+                    let date1 = new Date(a.updateDate).getMilliseconds();
+                    let date2 = new Date(b.updateDate).getMilliseconds();
+                    if(date1 < date2){
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
+                else{
+                    if(a.publishdate === null && b.publishdate === null){
+                        return 0;
+                    }
+                    else if(a.publishdate === null){
+                        return 1;
+                    }
+                    else if(b.publishdate === null){
+                        return -1;
+                    }
+                    let date1 = new Date(a.publishdate).getMilliseconds();
+                    let date2 = new Date(b.publishdate).getMilliseconds();
+                    if(date1 < date2){
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
             }
         );
         storeReducer({
@@ -901,9 +980,35 @@ function GlobalStoreContextProvider(props) {
     store.sortByOldest= function(){
         let pairs = store.idNamePairs.sort(function(a,b)
             {
-                let date1 = new Date(a.createdate).getMilliseconds();
-                let date2 = new Date(b.createdate).getMilliseconds();
-                return date1 - date2;
+                if(a.isCommunityList && b.isCommunityList){
+                    let date1 = new Date(a.updateDate).getMilliseconds();
+                    let date2 = new Date(b.updateDate).getMilliseconds();
+                    if(date1 < date2){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+                }
+                else{
+                    if(a.publishdate === null && b.publishdate === null){
+                        return 0;
+                    }
+                    else if(a.publishdate === null){
+                        return 1;
+                    }
+                    else if(b.publishdate === null){
+                        return -1;
+                    }
+                    let date1 = new Date(a.publishdate).getMilliseconds();
+                    let date2 = new Date(b.publishdate).getMilliseconds();
+                    if(date1 < date2){
+                        return 1;
+                    }
+                    else{
+                        return -1;
+                    }
+                }
             }
         );
         storeReducer({

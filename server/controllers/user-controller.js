@@ -10,7 +10,8 @@ getLoggedIn = async (req, res) => {
             user: {
                 firstName: loggedInUser.firstName,
                 lastName: loggedInUser.lastName,
-                email: loggedInUser.email
+                email: loggedInUser.email,
+                userName: loggedInUser.userName
             }
         }).send();
     })
@@ -28,15 +29,21 @@ loginUser = async(req, res) => {
                     errorMessage: "Please enter a password of at least 8 characters."
                 });
         }
-        const existingUser = await User.findOne({ email: email });
-        if (!existingUser) {
+        const exist1 = await User.findOne({ email: email });
+        const exist2 = await User.findOne({ userName: email });
+        if (!exist1 && !exist2) {
             return res
                 .status(201)
                 .json({
                     success: false,
-                    errorMessage: "An account with this email address does not exists."
+                    errorMessage: "An account with this email address or user name does not exists."
                 });
         }
+        let existingUser = exist1;
+        if(!exist1){
+            existingUser = exist2;
+        }
+        console.log(existingUser)
         if(existingUser.password != password){
             return res
                 .status(201).json({
@@ -56,7 +63,8 @@ loginUser = async(req, res) => {
             user: {
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,
-                email: existingUser.email
+                email: existingUser.email,
+                userName: existingUser.userName
             }
         }).send();
     } catch (err) {
@@ -66,8 +74,8 @@ loginUser = async(req, res) => {
 }
 registerUser = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, passwordVerify } = req.body;
-        if (!firstName || !lastName || !email || !password || !passwordVerify) {
+        const { firstName, lastName, email, password, passwordVerify,userName } = req.body;
+        if (!firstName || !lastName || !email || !password || !passwordVerify || !userName) {
             return res.status(201)
                         .json({ errorMessage: "Please enter all required fields." });
         }
@@ -93,12 +101,21 @@ registerUser = async (req, res) => {
                     errorMessage: "An account with this email address already exists."
                 })
         }
+        const exists = await User.findOne({ userName: userName });
+        if (exists) {
+            return res
+                .status(201)
+                .json({
+                    success: false,
+                    errorMessage: "An account with this user name already exists."
+                })
+        }
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            firstName, lastName, email, passwordHash, password
+            firstName, lastName, email, passwordHash, password, userName
         });
         const savedUser = await newUser.save();
 
@@ -114,7 +131,8 @@ registerUser = async (req, res) => {
             user: {
                 firstName: savedUser.firstName,
                 lastName: savedUser.lastName,
-                email: savedUser.email
+                email: savedUser.email,
+                userName: savedUser.userName
             }
         }).send();
     } catch (err) {
